@@ -1,0 +1,26 @@
+{
+  "name": "nackademin-todo-app",
+  "version": "1.0.0",
+  "description": "Inlämning 1 todo-app with nodejs and express for api ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sipapiga/nackademin-todo-app.git"
+  },
+  "author": "Pat Prasopsap",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sipapiga/nackademin-todo-app/issues"
+  },
+  "homepage": "https://github.com/sipapiga/nackademin-todo-app#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "nedb": "^1.8.0",
+    "nodemon": "^2.0.4"
+  }
+}

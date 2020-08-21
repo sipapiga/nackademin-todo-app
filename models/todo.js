@@ -8,7 +8,17 @@ module.exports = {
         if (err) reject(err);
         resolve(docs);
       });
-    })
+    });
+  },
+  getOneTodo: (id) => {
+    console.log(id)
+    return new Promise((resolve, reject) => {
+      db.findOne({ _id: id }, (err, docs) => {
+        console.log(docs)
+        if (err) reject(err);
+        resolve(docs);
+      });
+    });
   },
   createTodo: (items) => {
     console.log(items)

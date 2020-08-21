@@ -5,6 +5,19 @@ module.exports = {
     const result = await MyModel.getAll();
     res.status(200).json(result);
   },
+  getOneTodo: async (req, res) => {
+    let { id } = req.params;
+    if (id) {
+      try {
+        const result = await MyModel.getOneTodo(id)
+        res.status(200).json(result);
+      } catch (err) {
+        res.status(400).json('Something went wrong');
+      }
+    } else {
+      res.status(400).json(`${id} not found`);
+    }
+  },
   createTodo: async (req, res) => {
     let todo = req.body;
     console.log(req.body)
@@ -52,7 +65,7 @@ module.exports = {
         res.status(400).json('Something went wrong');
       }
     } else {
-      res.status(400).json('Invalid requested');
+      res.status(400).json(`${id} not found`);
     }
   },
   deleteTodo: async (req, res) => {

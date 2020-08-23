@@ -5,19 +5,40 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="main.css">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
+  <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css" />
   <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
     integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
   <title>Todo App</title>
 </head>
 
 <body>
-  <div class="container">
-    <div class="row">
-      <div class="col-8">
-        <div id="app">
-          <p v-if="feedback" class='text-danger text-center'>{{feedback}}</p>
+  <div id="app">
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
+      <a class="navbar-brand" href="#">Todo App</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="/">Todo <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/done">Done</a>
+          </li>
+      </div>
+      <form class="form-inline my-2 my-lg-0">
+        <button class="btn btn-success my-2 my-sm-0" type="submit">Login</button>
+      </form>
+    </nav>
+    <div class="container content-container">
+      <div class="row">
+        <div class="col-lg-8 col-md-9 col-sm-9 col-xs-12">
+          <b-alert v-if="dataSuccessMsg" variant="success" show dismissible>{{dataSuccessMsg}}</b-alert>
+          <b-alert variant="danger" v-if="feedback" show dismissible>{{feedback}}</b-alert>
           <div class="input-group mb-3">
             <input type="text" class="form-control" v-model='newTodo.title' placeholder="What do you want to do?"
               aria-label="Task">
@@ -26,25 +47,49 @@
             </div>
           </div>
 
-          <ul class="list-group">
-            <li class="list-group-item d-flex justify-content-between align-items-center" v-for="item in todos" :key="item.title">
-              {{ item.title }}
-              <span>
-                <button @click="editTodo" class="btn btn btn-warning" type="button"><i class="fas fa-edit"></i></button>
-                <button @click="deleteTodo" class="btn btn btn-danger" type="button"><i
-                    class="fas fa-trash-alt"></i></button>
+          <div>
+            <b-table :hover=true :head-variant="dark" :items="todos" :fields="fields" :sort-by.sync="sortBy"
+              :sort-desc.sync="sortDesc" sort-icon-left responsive="sm" class="text-white">
+              <template v-slot:cell(done)="data">
+                <b-form-group>
+                  <input type="checkbox" v-model="data.selected" />
+                </b-form-group>
+              </template>
+              <template class="text-white" v-slot:cell(title)="data">{{ data.value }}</template>
+              <template v-slot:head(title)="data">
+                <span class="text-white">{{ data.label.toUpperCase() }}</span>
+              </template>
+              <template v-slot:cell(createdAt)="data">{{ data.value.slice(0, 10) }}</template>
+              <template v-slot:head(createdAt)="data">
+                <span class="text-white">{{ data.label.toUpperCase() }}</span>
+              </template>
+              <template v-slot:cell(updatedAt)="data">{{ data.value.slice(0, 10) }}</template>
+              <template v-slot:head(updatedAt)="data">
+                <span class="text-white">{{ data.label.toUpperCase() }}</span>
+              </template>
+              <template v-slot:cell(actions)="data">
+                {{data}}
+                <b-button size="sm" v-b-toggle="'data.item._id'" variant="warning"><i class="fas fa-edit"></i>
+                </b-button>
+                <b-button size="sm" @click="confirmDelTodo(data)" class="btn btn btn-danger"><i
+                    class="fas fa-trash-alt"></i></b-button>
+                <b-collapse id="data.item._id" class="mt-2">
+                  <b-card>
+                    <p class="card-text">Collapse contents Here</p>
+                  </b-card>
+                </b-collapse>
+              </template>
+            </b-table>
+          </div>
 
-              </span>
-            </li>
-          </ul>
         </div>
       </div>
-
     </div>
 
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
   <script src="./js/main.js"></script>
 </body>

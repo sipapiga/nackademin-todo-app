@@ -1,5 +1,3 @@
-console.log("Test")
-
 const URL = 'http://localhost:3000/api/todo';
 
 const app = new Vue({
@@ -10,7 +8,20 @@ const app = new Vue({
       title: null,
       done: false
     },
-    feedback: null
+    feedback: null,
+    dataSuccessMsg: null,
+    sortBy: 'createdAt',
+    sortDesc: false,
+    fields: [
+      'done',
+      { key: 'title', label: 'Title', sortable: true },
+      { key: 'createdAt', label: 'Created', sortable: true },
+      { key: 'updatedAt', label: 'Updated', sortable: true },
+      { key: 'actions', label: 'Actions' }
+    ],
+    dark: 'dark',
+    light: 'light',
+    secondary: 'secondary'
   },
   async created () {
     try {
@@ -28,21 +39,65 @@ const app = new Vue({
         this.feedback = 'Please add your task!'
       } else {
         try {
-          axios.post(URL, {
+          await axios.post(URL, {
             title
           })
-            .then(res => { return res })
+            .then(res => {
+              if (res.status === 201) {
+                this.dataSuccessMsg = res.data.message
+                this.fetchTodo()
+              }
+            })
             .catch(err => console.error(err))
         } catch (err) {
           this.error = err.message
         }
       }
+    },
+    async fetchTodo () {
       this.todos = await axios.get(URL)
         .then(res => { return res.data })
         .catch(err => console.error(err))
     },
     async editTodo () {
+      console.log('edit')
+    },
+    async deleteTodo (id) {
+      await axios.delete(`${URL}/delete/${id}`)
+        .then(res => {
+          console.log(res)
 
+          if (res.status === 200) {
+            this.dataSuccessMsg = res.data.message
+            this.fetchTodo()
+          }
+        }).catch(err => {
+          this.feedback = err.response.data.error
+        })
+    },
+    confirmDelTodo (data) {
+      console.log(data)
+      this.$bvModal.msgBoxConfirm('Do you really want to delete?', {
+        title: 'Please Confirm',
+        size: 'sm',
+        buttonSize: 'sm',
+        okVariant: 'danger',
+        okTitle: 'YES',
+        cancelTitle: 'NO',
+        footerClass: 'p-2',
+        hideHeaderClose: false,
+        centered: true
+      })
+        .then(value => {
+          console.log(value)
+          if (value) {
+            this.deleteTodo(data.item._id)
+          }
+        })
+        .catch(err => {
+          // An error occurred
+        })
     }
+
   }
 })

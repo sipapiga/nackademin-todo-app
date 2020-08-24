@@ -8,6 +8,7 @@ const app = new Vue({
       title: null,
       done: false
     },
+    todo: null,
     feedback: null,
     dataSuccessMsg: null,
     sortBy: 'createdAt',
@@ -59,8 +60,32 @@ const app = new Vue({
         .then(res => { return res.data })
         .catch(err => console.error(err))
     },
-    async editTodo () {
-      console.log('edit')
+    async editTodo (data) {
+      const id = data.item._id
+      this.$refs['edit-Modal'].show()
+      this.todo = await axios.get(`${URL}/${id}`)
+    },
+    async saveEdit (id) {
+      console.log(id)
+      const title = this.todo.data.title
+      if (title < 3) {
+        this.feedback = "Enter at least 3 letters"
+      } else {
+        try {
+          await axios.patch(`${URL}/update/${id}`, {
+            title
+          })
+            .then(res => {
+              if (res.status === 200) {
+                this.$refs['edit-Modal'].hide()
+                this.fetchTodo()
+              }
+            })
+            .catch(err => console.error(err))
+        } catch (err) {
+          this.error = err.message
+        }
+      }
     },
     async deleteTodo (id) {
       await axios.delete(`${URL}/delete/${id}`)

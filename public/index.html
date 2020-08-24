@@ -68,16 +68,24 @@
                 <span class="text-white">{{ data.label.toUpperCase() }}</span>
               </template>
               <template v-slot:cell(actions)="data">
-                {{data}}
-                <b-button size="sm" v-b-toggle="'data.item._id'" variant="warning"><i class="fas fa-edit"></i>
+                <b-button size="sm" @click="editTodo(data)" variant="warning"><i class="fas fa-edit"></i>
+                  <b-modal ref="edit-Modal" title="Edit Todo">
+                    <b-form-group
+                    id="input-edit"
+                    label="Todo Title:"
+                    label-for="input-1"
+                  >
+                    <b-form-input v-if="todo" id="input-edit" v-model="todo.data.title"></b-form-input>
+                  </b-form-group>
+                  
+                    <template v-slot:modal-footer="{save, cancel}">
+                      <b-button size="sm" variant="success" @click="saveEdit(todo.data._id)">SAVE</b-button>
+                      <b-button size="sm" variant="danger" @click="cancel()">CANCEL</b-button>
+                    </template>
+                  </b-modal>
                 </b-button>
                 <b-button size="sm" @click="confirmDelTodo(data)" class="btn btn btn-danger"><i
                     class="fas fa-trash-alt"></i></b-button>
-                <b-collapse id="data.item._id" class="mt-2">
-                  <b-card>
-                    <p class="card-text">Collapse contents Here</p>
-                  </b-card>
-                </b-collapse>
               </template>
             </b-table>
           </div>

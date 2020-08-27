@@ -14,7 +14,7 @@
 
 <body>
   <div id="app">
-    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #223e56;">
       <a class="navbar-brand" href="#">Todo App</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,9 +25,6 @@
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
             <a class="nav-link" href="/">Todo <span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/done">Done</a>
           </li>
       </div>
       <form class="form-inline my-2 my-lg-0">
@@ -89,7 +86,8 @@
               </template>
             </b-table>
           </div>
-
+          <b-button size="sm" @click="getAllTodo()" variant="dark">ALL</b-button>
+          <b-button size="sm" @click="getDoneTodo()" variant="info">COMPLETED</b-button>
         </div>
       </div>
     </div>

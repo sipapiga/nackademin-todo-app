@@ -1,4 +1,4 @@
-const myController = require('../controllers/todo.js');
+const myController = require('../controllers/todos.js');
 const express = require('express');
 const router = express.Router();
 

@@ -1,5 +1,5 @@
 const Datastore = require('nedb');
-const todo = new Datastore({ filename: '.database/todo.db', autoload: true, timestampData: true });
+const todo = new Datastore({ filename: 'database/todo.db', autoload: true, timestampData: true });
 
 module.exports = {
   getAll: () => {
@@ -10,24 +10,28 @@ module.exports = {
       });
     });
   },
-  getOneTodo: (id) => {
+  getTodo: (id) => {
     console.log(id)
     return new Promise((resolve, reject) => {
-      todo.findOne({ _id: id }, (err, docs) => {
-        console.log(docs)
+      todo.findOne({ _id: id }, (err, todo) => {
+        console.log(todo)
         if (err) reject(err);
-        resolve(docs);
+        if(todo) resolve(todo)
+        else{
+          reject(new Error(`${id} not found`))
+        }
       });
     });
   },
   createTodo: (items) => {
     console.log(items)
-    let todo = {
-      title: items.title,
+    let todoItem = {
+      title : items.title,
       done: false
     }
+    console.log('todo ',todo)
     return new Promise((resolve, reject) => {
-      todo.insert(todo, (err, newDoc) => {
+      todo.insert(todoItem, (err, newDoc) => {
         if (err) reject(err);
         resolve(newDoc);
       })

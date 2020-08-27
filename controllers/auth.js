@@ -1,4 +1,4 @@
-const user = require('../models/user')
+const userModel = require('../models/user')
 const jwt = require('jsonwebtoken');
 
 function getSignedJwtToken (user) {
@@ -12,7 +12,7 @@ module.exports = {
     let user = req.body
     if (user) {
       try {
-        const result = await user.register({ user });
+        const result = await userModel.register({ user });
         res.status(200).json({
           message: 'Success',
           data: result
@@ -28,7 +28,7 @@ module.exports = {
     let credentials = req.body
     console.log(credentials)
     try{
-      const result = await user.login({ credentials });
+      const result = await userModel.login({ credentials });
       console.log(result)
       res.status(200).json({
         message: 'Success',

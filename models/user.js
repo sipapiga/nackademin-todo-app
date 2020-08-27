@@ -1,9 +1,10 @@
 const Datastore = require('nedb');
-const userDB = new Datastore({ filename: '.database/user.db', autoload: true, timestampData: true });
+const userDB = new Datastore({ filename: 'database/user.db', autoload: true, timestampData: true });
 const bcrypt = require('bcryptjs')
 
 module.exports = {
   register: (data) => {
+    console.log(data)
     let password = data.user.password
     const salt = bcrypt.genSaltSync(10)
     const hashPass = bcrypt.hashSync(password, salt)

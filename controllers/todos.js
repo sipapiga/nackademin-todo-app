@@ -5,14 +5,14 @@ module.exports = {
     const result = await MyModel.getAll();
     res.status(200).json(result);
   },
-  getOneTodo: async (req, res) => {
+  getTodo: async (req, res) => {
     let { id } = req.params;
     if (id) {
       try {
-        const result = await MyModel.getOneTodo(id)
+        const result = await MyModel.getTodo(id)
         res.status(200).json(result);
       } catch (err) {
-        res.status(400).json('Something went wrong');
+        res.status(400).json({err: err.message});
       }
     } else {
       res.status(400).json(`${id} not found`);

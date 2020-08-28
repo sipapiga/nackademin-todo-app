@@ -13,6 +13,7 @@ module.exports = {
       firstName: data.user.firstName,
       lastName: data.user.lastName,
       email: data.user.email,
+      role: data.user.role,
       username: data.user.username,
       password: hashPass
     }
@@ -29,17 +30,13 @@ module.exports = {
 
     return new Promise((resolve, reject) => {
       userDB.findOne({ username }, (err, user) => {
-        console.log('user ',user)
-        if (err) reject(err)
+        if (!user) reject(new Error('User not found'))
         else {
           const passwordAttempt = data.credentials.password
-          console.log(passwordAttempt)
           const validPassword = bcrypt.compareSync(passwordAttempt, user.password);
-          console.log(validPassword)
           if (validPassword) resolve(user)
           else {
-            console.log('Invalid credentials')
-            reject('Invalid credentials')
+            reject(new Error('Invalid credentials'))
           }
         }
 

@@ -2,8 +2,8 @@ const userModel = require('../models/user')
 const jwt = require('jsonwebtoken');
 
 function getSignedJwtToken (user) {
-  return jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_EXPIRE
+  return jwt.sign(user, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRE
   });
 }
 
@@ -20,22 +20,23 @@ module.exports = {
       } catch (err) {
         res.status(400).json('Something wrong!');
       }
-    }else{
+    } else {
       res.status(400).json('Invalid request!');
     }
   },
   login: async (req, res) => {
+    console.log(req.body)
     let credentials = req.body
-    console.log(credentials)
-    try{
-      const result = await userModel.login({ credentials });
-      console.log(result)
+    try {
+      const user = await userModel.login({ credentials });
+      const token = getSignedJwtToken(user);
       res.status(200).json({
         message: 'Success',
-        data: result
+        token,
+        data: user
       });
-    }catch(err){
-      res.status(400).json('Something wrong!');
+    } catch (err) {
+      res.status(400).json({err: err.message});
     }
   }
 }

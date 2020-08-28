@@ -4,3 +4,11 @@
   padding: 20px;
   border-radius: 50px;
 }
+.form-control{
+  color:white; 
+  opacity:50%;
+  color: white
+}
+.card-panel{
+  width: 90%;
+}

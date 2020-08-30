@@ -1,6 +1,23 @@
 const URL = 'http://localhost:3000/api/todo';
 const authURL = 'http://localhost:3000/api/auth/';
 
+const Api = axios.create({
+  baseURL: 'http://localhost:3000/api/'
+});
+
+Api.interceptors.request.use(
+function(config) {
+  const token = localStorage.getItem("token"); 
+  if (token) {
+    config.headers["authorization"] = 'Bearer ' + token;
+  }
+  return config;
+},
+function(error) {
+  return Promise.reject(error);
+}
+);
+
 Vue.component('Navbar', {
   name: 'navbar',
   template:
@@ -17,15 +34,23 @@ Vue.component('Navbar', {
           <li class="nav-item active">
             <a class="nav-link" href="/">Todo <span class="sr-only">(current)</span></a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/admin" v-if="user.userRole === 'admin'" >Admin</a>
+          </li>
         </ul>
       </div>
       <form class="form-inline my-2 my-lg-0">
-        <button class="btn btn-success my-2 my-sm-0" type="submit" v-if=user>Logout</button>
+        <button class="btn btn-success my-2 my-sm-0" type="submit" v-if=user.user v-on:click="removeToken" >Logout</button>
       </form>
     </nav>
 
   `,
   props: ['user'],
+  methods:{
+    removeToken(){
+      localStorage.removeItem('token');
+    }
+  }
 })
 
 Vue.component('Todo', {
@@ -89,6 +114,7 @@ Vue.component('Todo', {
       </div>
     </div>
   `,
+  props:['user'],
   data () {
     return {
       todos: [],
@@ -116,7 +142,7 @@ Vue.component('Todo', {
   },
   async created () {
     try {
-      this.todos = await axios.get(URL)
+      this.todos = await Api.get('todo')
         .then(res => { return res.data })
         .catch(err => console.error(err))
     } catch (err) {
@@ -130,7 +156,7 @@ Vue.component('Todo', {
         this.feedback = 'Please add your task!'
       } else {
         try {
-          await axios.post(URL, {
+          await Api.post('todo', {
             title
           })
             .then(res => {
@@ -146,14 +172,14 @@ Vue.component('Todo', {
       }
     },
     async fetchTodo () {
-      this.todos = await axios.get(URL)
+      this.todos = await Api.get('todo')
         .then(res => { return res.data })
         .catch(err => console.error(err))
     },
     async editTodo (data) {
       const id = data.item._id
       this.$refs['edit-Modal'].show()
-      this.todo = await axios.get(`${URL}/${id}`)
+      this.todo = await Api.get(`${URL}/${id}`)
     },
     async saveEdit (id) {
       console.log(id)
@@ -162,7 +188,7 @@ Vue.component('Todo', {
         this.feedback = "Enter at least 3 letters"
       } else {
         try {
-          await axios.patch(`${URL}/update/${id}`, {
+          await Api.patch(`${URL}/update/${id}`, {
             title
           })
             .then(res => {
@@ -178,7 +204,7 @@ Vue.component('Todo', {
       }
     },
     async deleteTodo (id) {
-      await axios.delete(`${URL}/delete/${id}`)
+      await Api.delete(`${URL}/delete/${id}`)
         .then(res => {
           console.log(res)
 
@@ -261,6 +287,9 @@ Vue.component('Login', {
   </div>
 </div>
   `,
+  props:[
+    'user'
+  ],
   data () {
     return {
       seen: true,
@@ -277,7 +306,7 @@ Vue.component('Login', {
       console.log('click')
       console.log(this.username + ' ' + this.password)
       try {
-        await axios.post(authURL + 'login', {
+        await Api.post('auth/login', {
           username: this.username,
           password: this.password
         }
@@ -287,6 +316,12 @@ Vue.component('Login', {
             console.log('login')
             this.seen = false
             this.$parent.seen = true
+            this.$parent.user = res.data
+            console.log(res.data.data.role)
+            this.$parent.userRole = res.data.data.role
+            console.log(res.data.data.token)
+            localStorage.setItem("token", res.data.token);
+            console.log(this.$parent.user)
 
           }
           this.email = ''
@@ -313,6 +348,7 @@ const app = new Vue({
   el: '#app',
   data: {
     seen: false,
-    user: null
+    user: null,
+    userRole :null
   }
 })

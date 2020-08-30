@@ -14,8 +14,8 @@
 
 <body>
   <div id="app">
-    <Navbar></Navbar>
-    <Todo v-if=seen></Todo>
+    <Navbar v-bind:user="{user, userRole}" ></Navbar>
+    <Todo v-if=seen  v-bind:user="user"></Todo>
     <Login></Login>
   </div>
 

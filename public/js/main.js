@@ -74,8 +74,8 @@ Vue.component('Todo', {
             <b-table :hover=true :head-variant="dark" :items="todos" :fields="fields" :sort-by.sync="sortBy"
               :sort-desc.sync="sortDesc" sort-icon-left responsive="sm" class="text-white">
               <template v-slot:cell(done)="data">
-                <b-form-group>
-                  <input type="checkbox" v-model="data.selected" />
+              <b-form-group>
+                  <input type="checkbox" v-model="data.item.done" />
                 </b-form-group>
               </template>
               <template class="text-white" v-slot:cell(title)="data">{{ data.value }}</template>

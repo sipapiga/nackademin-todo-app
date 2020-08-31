@@ -12,3 +12,7 @@
 .card-panel{
   width: 90%;
 }
+.done{
+  text-decoration: line-through;
+  color:grey
+}

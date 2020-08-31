@@ -2,7 +2,8 @@ const MyModel = require('../models/todo.js');
 
 module.exports = {
   getAll: async (req, res) => {
-    const result = await MyModel.getAll();
+    const userID = req.user._id
+    const result = await MyModel.getAll(userID);
     res.status(200).json(result);
   },
   getTodo: async (req, res) => {
@@ -20,10 +21,11 @@ module.exports = {
   },
   createTodo: async (req, res) => {
     let todo = req.body;
+    req.body.user = req.user
     console.log(req.body)
     if (todo) {
       try {
-        const result = await MyModel.createTodo(todo);
+        const result = await MyModel.createTodo(req.body);
         console.log(result)
         res.status(201).json({
           message: 'Todo Created',

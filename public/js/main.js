@@ -1,5 +1,3 @@
-const URL = 'http://localhost:3000/api/todo';
-const authURL = 'http://localhost:3000/api/auth/';
 
 const Api = axios.create({
   baseURL: 'http://localhost:3000/api/'
@@ -142,7 +140,7 @@ Vue.component('Todo', {
   },
   async created () {
     try {
-      this.todos = await Api.get('todo')
+      this.todos = await Api.get('todos')
         .then(res => { return res.data })
         .catch(err => console.error(err))
     } catch (err) {
@@ -156,7 +154,7 @@ Vue.component('Todo', {
         this.feedback = 'Please add your task!'
       } else {
         try {
-          await Api.post('todo', {
+          await Api.post('todos', {
             title
           })
             .then(res => {
@@ -172,14 +170,14 @@ Vue.component('Todo', {
       }
     },
     async fetchTodo () {
-      this.todos = await Api.get('todo')
+      this.todos = await Api.get('todos')
         .then(res => { return res.data })
         .catch(err => console.error(err))
     },
     async editTodo (data) {
       const id = data.item._id
       this.$refs['edit-Modal'].show()
-      this.todo = await Api.get(`${URL}/${id}`)
+      this.todo = await Api.get(`todos/${id}`)
     },
     async saveEdit (id) {
       console.log(id)
@@ -188,7 +186,7 @@ Vue.component('Todo', {
         this.feedback = "Enter at least 3 letters"
       } else {
         try {
-          await Api.patch(`${URL}/update/${id}`, {
+          await Api.patch(`todos/${id}`, {
             title
           })
             .then(res => {
@@ -204,7 +202,7 @@ Vue.component('Todo', {
       }
     },
     async deleteTodo (id) {
-      await Api.delete(`${URL}/delete/${id}`)
+      await Api.delete(`todos/${id}`)
         .then(res => {
           console.log(res)
 

@@ -12,7 +12,7 @@ module.exports = {
     let user = req.body
     if (user) {
       try {
-        const result = await userModel.register({ user });
+        const result = await userModel.register(user);
         res.status(200).json({
           message: 'Success',
           data: result
@@ -26,7 +26,7 @@ module.exports = {
   },
   login: async (req, res) => {
     console.log(req.body)
-    let credentials = req.body
+    const credentials = req.body
     try {
       const user = await userModel.login({ credentials });
       const token = getSignedJwtToken(user);

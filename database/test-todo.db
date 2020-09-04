@@ -1,0 +1,3 @@
+{"title":"Todo1","done":false,"createdBy":{"_id":"xyz"},"_id":"42hPA8gvX9qcopvm","createdAt":{"$$date":1599205137860},"updatedAt":{"$$date":1599205137860}}
+{"title":"Todo2","done":false,"createdBy":{"_id":"abc"},"_id":"nNGDvJB2GdXyuwxz","createdAt":{"$$date":1599205137886},"updatedAt":{"$$date":1599205137886}}
+{"$$deleted":true,"_id":"42hPA8gvX9qcopvm"}

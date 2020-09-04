@@ -1,11 +1,10 @@
-const Datastore = require('nedb');
-const todo = new Datastore({ filename: 'database/todo.db', autoload: true, timestampData: true });
+const {todoCollection} =  require('../database/index');
 
 module.exports = {
   getAll: (userId) => {
     console.log(userId)
     return new Promise((resolve, reject) => {
-      todo.find({"createdBy._id": userId }, (err, docs) => {
+      todoCollection.find({"createdBy._id": userId }, (err, docs) => {
         if (err) reject(err);
         resolve(docs);
       });
@@ -14,7 +13,7 @@ module.exports = {
   getTodo: (id) => {
     console.log(id)
     return new Promise((resolve, reject) => {
-      todo.findOne({ _id: id }, (err, todo) => {
+      todoCollection.findOne({ _id: id }, (err, todo) => {
         console.log(todo)
         if (err) reject(err);
         if(todo) resolve(todo)
@@ -31,9 +30,9 @@ module.exports = {
       done: false,
       createdBy: data.user
     }
-    console.log('todo ',todo)
+
     return new Promise((resolve, reject) => {
-      todo.insert(todoItem, (err, newDoc) => {
+      todoCollection.insert(todoItem, (err, newDoc) => {
         if (err) reject(err);
         resolve(newDoc);
       })
@@ -43,7 +42,7 @@ module.exports = {
     console.log(newItems)
     console.log(id)
     return new Promise((resolve, reject) => {
-      todo.update({ _id: id }, { $set: newItems }, { returnUpdatedDocs: true }, (err, numReplaced, updated) => {
+      todoCollection.update({ _id: id }, { $set: newItems }, { returnUpdatedDocs: true }, (err, numReplaced, updated) => {
         if (err) reject(err);
         resolve(updated);
       });
@@ -51,11 +50,18 @@ module.exports = {
   },
   deleteTodo: (id) => {
     return new Promise((resolve, reject) => {
-      todo.remove({ _id: id }, { multi: true }, function (err, numRemoved) {
+      todoCollection.remove({ _id: id }, { multi: true }, function (err, numRemoved) {
         if (err) reject(err);
         resolve(numRemoved);
       });
 
     })
+  },
+  clearTodo:()=>{
+    return todoCollection.remove({ }, { multi: true }, function (err, numRemoved) {
+      todoCollection.loadDatabase(function (err) {
+        return
+      });
+    });
   }
 }

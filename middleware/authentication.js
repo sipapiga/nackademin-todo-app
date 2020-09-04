@@ -4,6 +4,11 @@ module.exports = {
   protect: (req, res, next) => {
     if (!req.headers.authorization) return res.sendStatus(403)
     const token = req.headers.authorization.replace("Bearer ", "")
+    if(!token){
+      const error = new Error('Not authenticated');
+      error.statusCode = 401
+      throw error
+    }
 
     try {
       const success = jwt.verify(token, process.env.JWT_SECRET)

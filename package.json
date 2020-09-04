@@ -4,7 +4,7 @@
   "description": "Inlämning 1 todo-app with nodejs and express for api ",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "start": "nodemon app.js"
   },
   "repository": {
@@ -20,6 +20,7 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
+    "chai": "^4.2.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",

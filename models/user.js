@@ -1,24 +1,23 @@
-const Datastore = require('nedb');
-const userDB = new Datastore({ filename: 'database/user.db', autoload: true, timestampData: true });
+const {userCollection} =  require('../database/index');
 const bcrypt = require('bcryptjs')
 
 module.exports = {
   register: (data) => {
     console.log(data)
-    let password = data.user.password
+    let password = data.password
     const salt = bcrypt.genSaltSync(10)
     const hashPass = bcrypt.hashSync(password, salt)
 
-    let user = {
-      firstName: data.user.firstName,
-      lastName: data.user.lastName,
-      email: data.user.email,
-      role: data.user.role,
-      username: data.user.username,
+    const user = {
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+      role: data.role,
+      username: data.username,
       password: hashPass
     }
     return new Promise((resolve, reject) => {
-      userDB.insert(user, (err, newDoc) => {
+      userCollection.insert(user, (err, newDoc) => {
         if (err) reject(err)
         resolve(newDoc)
       })
@@ -29,7 +28,7 @@ module.exports = {
     const username = data.credentials.username
 
     return new Promise((resolve, reject) => {
-      userDB.findOne({ username }, (err, user) => {
+      userCollection.findOne({ username }, (err, user) => {
         if (!user) reject(new Error('User not found'))
         else {
           const passwordAttempt = data.credentials.password
@@ -45,10 +44,17 @@ module.exports = {
   },
   getUsers: () => {
     return new Promise((resolve, reject) => {
-      user.find({}, (err, docs) => {
+      userCollection.find({}, (err, docs) => {
         if (err) reject(err);
         resolve(docs);
       });
     });
   },
+  clear:()=>{
+    return userCollection.remove({ }, { multi: true }, function (err, numRemoved) {
+      userCollection.loadDatabase(function (err) {
+        return
+      });
+    });
+  }
 }

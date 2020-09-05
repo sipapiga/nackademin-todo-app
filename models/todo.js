@@ -1,10 +1,9 @@
-const {todoCollection} =  require('../database/index');
+const { todoCollection } = require('../database/index');
 
 module.exports = {
   getAll: (userId) => {
-    console.log(userId)
     return new Promise((resolve, reject) => {
-      todoCollection.find({"createdBy._id": userId }, (err, docs) => {
+      todoCollection.find({ "createdBy._id": userId }, (err, docs) => {
         if (err) reject(err);
         resolve(docs);
       });
@@ -16,19 +15,19 @@ module.exports = {
       todoCollection.findOne({ _id: id }, (err, todo) => {
         console.log(todo)
         if (err) reject(err);
-        if(todo) resolve(todo)
-        else{
+        if (todo) resolve(todo)
+        else {
           reject(new Error(`${id} not found`))
         }
       });
     });
   },
   createTodo: (data) => {
-    console.log(data)
     let todoItem = {
-      title : data.title,
+      title: data.title,
       done: false,
-      createdBy: data.user
+      createdBy: data.user,
+      todolistId: data.todolistId
     }
 
     return new Promise((resolve, reject) => {
@@ -39,8 +38,7 @@ module.exports = {
     })
   },
   updateTodo: (newItems, id) => {
-    console.log(newItems)
-    console.log(id)
+
     return new Promise((resolve, reject) => {
       todoCollection.update({ _id: id }, { $set: newItems }, { returnUpdatedDocs: true }, (err, numReplaced, updated) => {
         if (err) reject(err);
@@ -57,8 +55,8 @@ module.exports = {
 
     })
   },
-  clearTodo:()=>{
-    return todoCollection.remove({ }, { multi: true }, function (err, numRemoved) {
+  clearTodo: () => {
+    return todoCollection.remove({}, { multi: true }, function (err, numRemoved) {
       todoCollection.loadDatabase(function (err) {
         return
       });

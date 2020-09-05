@@ -20,19 +20,6 @@ describe('Todo Model', () => {
     //assert
     todo.title.should.be.equal('Todo2');
   })
-  it('should create a todo', async () => {
-    //arrange
-    const todoItem = {
-      title: 'Todo2',
-      user: {
-        _id: 'xyz'
-      }
-    }
-    //act
-    const todo = await Todo.createTodo(todoItem);
-    //assert
-    todo.title.should.be.equal('Todo2');
-  })
 
   it('should get all todos', async () => {
     const todoItem1 = {
@@ -51,7 +38,6 @@ describe('Todo Model', () => {
     await Todo.createTodo(todoItem2);
 
     const allTodo = await Todo.getAll('xyz');
-    console.log('AllTodo', allTodo)
     allTodo.should.have.lengthOf(1);
   })
 

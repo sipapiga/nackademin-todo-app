@@ -1,5 +1,6 @@
-const {userCollection} =  require('../database/index');
+const { userCollection } = require('../database/index');
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken');
 
 module.exports = {
   register: (data) => {
@@ -49,8 +50,13 @@ module.exports = {
       });
     });
   },
-  clear:()=>{
-    return userCollection.remove({ }, { multi: true }, function (err, numRemoved) {
+  getSignedJwtToken: (user) => {
+    return jwt.sign(user, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRE
+    });
+  },
+  clear: () => {
+    return userCollection.remove({}, { multi: true }, function (err, numRemoved) {
       userCollection.loadDatabase(function (err) {
         return
       });

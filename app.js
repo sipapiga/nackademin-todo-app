@@ -11,10 +11,12 @@ app.use(express.static('./public'))
 const todoRoute = require('./routes/todo.js');
 const userRoute = require('./routes/user.js');
 const authRoute = require('./routes/auth.js');
+const todoListRoute = require('./routes/todolist.js');
 
 app.use('/api/todos', todoRoute);
 app.use('/api/users', userRoute);
 app.use('/api/auth', authRoute);
+app.use('/api/todolist', todoListRoute);
 
-const port = 3000;
-app.listen(port, () => console.log(`Server running on ${port}`));
+
+module.exports = app;

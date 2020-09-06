@@ -1,7 +1,6 @@
 const { expect, should } = require('chai')
 const Todolist = require('../models/todolist')
 const Todo = require('../models/todo')
-const todo = require('../models/todo')
 
 describe('TodoList Model', function () {
   beforeEach(async function () {

@@ -23,8 +23,18 @@ module.exports = {
   getAll: () => {
 
   },
-  getTodolist: () => {
-
+  getTodolist: async (req, res) => {
+    let { id } = req.params;
+    if (id) {
+      try {
+        const result = await todolistModel.getTodolist(id)
+        res.status(200).json(result);
+      } catch (err) {
+        res.status(400).json({ err: err.message });
+      }
+    } else {
+      res.status(400).json(`${id} not found`);
+    }
   },
   updateTodolist: () => {
 

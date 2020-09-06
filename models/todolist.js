@@ -19,6 +19,17 @@ module.exports = {
       });
     });
   },
+  getTodolist: (id) => {
+    return new Promise((resolve, reject) => {
+      todolistCollection.findOne({ _id: id }, (err, todolist) => {
+        if (err) reject(err);
+        if (todolist) resolve(todolist)
+        else {
+          reject(new Error(`${id} not found`))
+        }
+      });
+    });
+  },
   updateTodolist: (newtodoList, id) => {
     console.log(newtodoList)
     console.log(id)

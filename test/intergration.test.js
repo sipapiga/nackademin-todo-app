@@ -31,7 +31,7 @@ describe('Todolist API routes', function () {
   })
 
   it('should create todolist', function () {
-    const fields = {
+    const todoList = {
       title: 'Intergration List',
       creator: 'Pat',
       todos: []
@@ -40,11 +40,33 @@ describe('Todolist API routes', function () {
       .post('/api/todolist')
       .set('authorization', `Bearer ${this.test.token}`)
       .set('Content-Type', `application/json`)
-      .send(fields)
+      .send(todoList)
       .end((err, res) => {
+        console.log(res.body)
         expect(res).to.have.status(201)
         expect(res).to.be.json
         expect(res.body).to.have.keys(['message', 'data'])
       })
+  }),
+  
+  it('should get a todolist route', async function () {
+    const todoList = {
+      title: 'Intergration List',
+      creator: 'Pat',
+      todos: []
+    }
+
+    const result = await Todolist.createTodolist(todoList)
+    request(app)
+      .get(`/api/todolist/${result._id}`)
+      .set('authorization', `Bearer ${this.test.token}`)
+      .set('Content-Type', `application/json`)
+      .end((err, res) => {
+        console.log(res.body)
+        expect(res).to.have.status(200)
+        expect(res).to.be.json
+        expect(res.body).to.have.keys(['_id', 'title','creator','todos','createdAt','updatedAt'])
+      })
   })
+
 })

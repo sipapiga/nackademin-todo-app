@@ -37,7 +37,6 @@ module.exports = {
     }
   },
   updateTodolist: async (req, res) => {
-    console.log(req)
     let { id } = req.params;
     let creator = req.body.creator;
     let newTodolist = {}

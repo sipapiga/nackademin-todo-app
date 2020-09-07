@@ -36,8 +36,34 @@ module.exports = {
       res.status(400).json(`${id} not found`);
     }
   },
-  updateTodolist: () => {
+  updateTodolist: async (req, res) => {
+    console.log(req)
+    let { id } = req.params;
+    let creator = req.body.creator;
+    let newTodolist = {}
+    if (creator) {
+      newTodolist = {
+        creator: req.body.creator
+      }
+    } else {
+      newTodolist = {
+        title: req.body.title,
+      }
+    }
 
+    if (id) {
+      try {
+        const result = await todolistModel.updateTodolist(newTodolist, id);
+        res.status(200).json({
+          message: 'Todolist Updated',
+          data: result
+        });
+      } catch (err) {
+        res.status(400).json('Something went wrong');
+      }
+    } else {
+      res.status(400).json(`${id} not found`);
+    }
   },
   deleteTodolist: () => {
 

@@ -11,6 +11,13 @@ describe('Todolist API routes', function () {
   beforeEach(async function () {
     await User.clear()
     await Todolist.clearTodolist()
+    const todoList = {
+      title: 'Intergration List',
+      creator: 'Pat',
+      todos: []
+    }
+
+    this.result = await Todolist.createTodolist(todoList)
 
     const fields = await User.register({
       firstName: 'Jerrine',
@@ -47,26 +54,37 @@ describe('Todolist API routes', function () {
         expect(res).to.be.json
         expect(res.body).to.have.keys(['message', 'data'])
       })
-  }),
-  
-  it('should get a todolist route', async function () {
-    const todoList = {
-      title: 'Intergration List',
-      creator: 'Pat',
-      todos: []
-    }
+  })
 
-    const result = await Todolist.createTodolist(todoList)
+  it('should get a todolist route', async function () {
+
     request(app)
-      .get(`/api/todolist/${result._id}`)
+      .get(`/api/todolist/${this.result._id}`)
       .set('authorization', `Bearer ${this.test.token}`)
       .set('Content-Type', `application/json`)
       .end((err, res) => {
-        console.log(res.body)
         expect(res).to.have.status(200)
         expect(res).to.be.json
-        expect(res.body).to.have.keys(['_id', 'title','creator','todos','createdAt','updatedAt'])
+        expect(res.body).to.have.keys(['_id', 'title', 'creator', 'todos', 'createdAt', 'updatedAt'])
       })
   })
+/* 
+  it('should get status 200 when update todolist route', async function () {
+
+    const updatedTodolist = {
+      title: 'update List'
+    }
+    request(app)
+      .patch(`/api/todolist/${this.result._id}`)
+      .set('authorization', `Bearer ${this.test.token}`)
+      .set('Content-Type', `application/json`)
+      .send(updatedTodolist)
+      .end((err, res) => {
+        console.log(res)
+        expect(res).to.have.status(200)
+        expect(res).to.be.json
+        expect(res.body.message).to.be('Todolist Updated')
+      })
+  }) */
 
 })

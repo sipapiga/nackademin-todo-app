@@ -22,7 +22,6 @@ module.exports = {
   createTodo: async (req, res) => {
     let todo = req.body;
     req.body.user = req.user
-    console.log(req.body)
     if (todo) {
       try {
         const result = await MyModel.createTodo(req.body);
@@ -52,9 +51,6 @@ module.exports = {
       }
     }
 
-    console.log(req.body)
-    console.log(req.params)
-    console.log(newTodo)
     if (id) {
       try {
         const result = await MyModel.updateTodo(newTodo, id);

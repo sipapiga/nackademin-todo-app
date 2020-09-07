@@ -24,7 +24,6 @@ module.exports = {
     })
   },
   login: (data) => {
-    console.log('login')
     const username = data.credentials.username
 
     return new Promise((resolve, reject) => {

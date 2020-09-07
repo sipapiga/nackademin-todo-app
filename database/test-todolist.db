@@ -1,3 +1,3 @@
-{"title":"List1","creator":"Pat","todos":["ECseIYm0Xln9Ap8N","GaEbypqByzCihhpZ"],"_id":"H3StuOpAVkLYtsDF","createdAt":{"$$date":1599463057856},"updatedAt":{"$$date":1599463057856}}
-{"title":"List2","creator":"Kiana","todos":["5f53aa72fc13ae3b8f000000","5f53aa72fc13ae3b8f000002"],"_id":"EZ5A1g0U2MUG2Me3","createdAt":{"$$date":1599463057857},"updatedAt":{"$$date":1599463057857}}
-{"$$deleted":true,"_id":"H3StuOpAVkLYtsDF"}
+{"title":"List1","creator":"Pat","todos":["b70E8HHbpviMNyC0","hEkeCrjGRHOsz74n"],"_id":"j2aM5wgyf46ASeqH","createdAt":{"$$date":1599465274632},"updatedAt":{"$$date":1599465274632}}
+{"title":"List2","creator":"Kiana","todos":["5f53aa72fc13ae3b8f000000","5f53aa72fc13ae3b8f000002"],"_id":"m5tqxCvd6xYpbSMs","createdAt":{"$$date":1599465274634},"updatedAt":{"$$date":1599465274634}}
+{"$$deleted":true,"_id":"j2aM5wgyf46ASeqH"}

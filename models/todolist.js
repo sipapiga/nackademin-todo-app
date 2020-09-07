@@ -31,8 +31,6 @@ module.exports = {
     });
   },
   updateTodolist: (newtodoList, id) => {
-    console.log(newtodoList)
-    console.log(id)
     return new Promise((resolve, reject) => {
       todolistCollection.update({ _id: id }, { $set: newtodoList }, { returnUpdatedDocs: true }, (err, numReplaced, updated) => {
         if (err) reject(err);

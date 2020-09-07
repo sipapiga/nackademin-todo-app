@@ -4,7 +4,7 @@
   "description": "Inlämning 1 todo-app with nodejs and express for api ",
   "main": "index.js",
   "scripts": {
-    "test": "mocha",
+    "test": "SET ENVIRONMENT=test&&mocha",
     "start": "nodemon start.js"
   },
   "repository": {

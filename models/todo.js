@@ -10,7 +10,6 @@ module.exports = {
     });
   },
   getTodo: (id) => {
-    console.log(id)
     return new Promise((resolve, reject) => {
       todoCollection.findOne({ _id: id }, (err, todo) => {
         console.log(todo)

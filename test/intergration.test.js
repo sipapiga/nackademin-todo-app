@@ -68,7 +68,7 @@ describe('Todolist API routes', function () {
       })
   })
 
-  it('should get status 200 when update todolist route', function () {
+ it('should get status 200 when update todolist route', function () {
 
     const updatedTodolist = {
       title: 'update List'

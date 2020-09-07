@@ -25,7 +25,6 @@ module.exports = {
     if (todo) {
       try {
         const result = await MyModel.createTodo(req.body);
-        console.log(result)
         res.status(201).json({
           message: 'Todo Created',
           data: result
@@ -54,7 +53,6 @@ module.exports = {
     if (id) {
       try {
         const result = await MyModel.updateTodo(newTodo, id);
-        console.log(result)
         res.status(200).json({
           message: 'Todo Updated',
           data: result

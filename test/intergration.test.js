@@ -17,7 +17,8 @@ describe('Todolist API routes', function () {
       todos: []
     }
 
-    this.result = await Todolist.createTodolist(todoList)
+    const result = await Todolist.createTodolist(todoList)
+    this.currentTest.resultID = result._id
 
     const fields = await User.register({
       firstName: 'Jerrine',
@@ -55,10 +56,26 @@ describe('Todolist API routes', function () {
       })
   })
 
+  it('should get status 200 when update todolist route', function () {
+
+    const updatedTodolist = {
+      title: 'update List'
+    }
+    request(app)
+      .patch(`/api/todolist/${this.test.resultID}`)
+      .set('authorization', `Bearer ${this.test.token}`)
+      .set('Content-Type', `application/json`)
+      .send(updatedTodolist)
+      .end((err, res) => {
+        expect(res).to.have.status(200)
+        expect(res).to.be.json
+        expect(res.body.message).to.equal('Todolist Updated')
+      })
+  })
   it('should get a todolist route', function () {
 
     request(app)
-      .get(`/api/todolist/${this.result._id}`)
+      .get(`/api/todolist/${this.test.resultID}`)
       .set('authorization', `Bearer ${this.test.token}`)
       .set('Content-Type', `application/json`)
       .end((err, res) => {
@@ -68,21 +85,5 @@ describe('Todolist API routes', function () {
       })
   })
 
- it('should get status 200 when update todolist route', function () {
-
-    const updatedTodolist = {
-      title: 'update List'
-    }
-    request(app)
-      .patch(`/api/todolist/${this.result._id}`)
-      .set('authorization', `Bearer ${this.test.token}`)
-      .set('Content-Type', `application/json`)
-      .send(updatedTodolist)
-      .end((err, res) => {
-        expect(res).to.have.status(200)
-        expect(res).to.be.json
-        expect(res.body.message).to.equal('Todolist Updated')
-      })
-  }) 
 
 })

@@ -12,7 +12,7 @@ module.exports = {
   getTodo: (id) => {
     return new Promise((resolve, reject) => {
       todoCollection.findOne({ _id: id }, (err, todo) => {
-        console.log(todo)
+
         if (err) reject(err);
         if (todo) resolve(todo)
         else {

@@ -4,11 +4,9 @@ module.exports = {
   createTodolist: async (req, res) => {
     let todo = req.body;
     //  req.body.user = req.user
-    console.log(req.body)
     if (todo) {
       try {
         const result = await todolistModel.createTodolist(req.body);
-        console.log(result)
         res.status(201).json({
           message: 'Todolist Created',
           data: result
@@ -30,7 +28,8 @@ module.exports = {
         const result = await todolistModel.getTodolist(id)
         res.status(200).json(result);
       } catch (err) {
-        res.status(400).json({ err: err.message });
+        console.log(err)
+        res.status(401).json({ err: err.message });
       }
     } else {
       res.status(400).json(`${id} not found`);
@@ -58,7 +57,7 @@ module.exports = {
           data: result
         });
       } catch (err) {
-        res.status(400).json('Something went wrong');
+        res.status(401).json('Something went wrong');
       }
     } else {
       res.status(400).json(`${id} not found`);

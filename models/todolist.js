@@ -11,7 +11,6 @@ module.exports = {
 
   },
   getAll: (username) => {
-    console.log(username)
     return new Promise((resolve, reject) => {
       todolistCollection.find({ "creator": username }, (err, docs) => {
         if (err) reject(err);
@@ -34,7 +33,6 @@ module.exports = {
     return new Promise((resolve, reject) => {
       todolistCollection.update({ _id: id }, { $set: newtodoList }, { returnUpdatedDocs: true }, (err, numReplaced, updated) => {
         if (err) reject(err);
-        console.log(updated)
         resolve(updated);
       });
     })

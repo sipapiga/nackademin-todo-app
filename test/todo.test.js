@@ -9,7 +9,7 @@ describe('Todo Model', () => {
   it('should create a todo', async () => {
     //arrange
     const todoItem = {
-      title: 'Todo2',
+      title: 'Todo1',
       user: {
         firstName: 'xyz'
       }
@@ -18,18 +18,18 @@ describe('Todo Model', () => {
     const todo = await Todo.createTodo(todoItem);
 
     //assert
-    todo.title.should.be.equal('Todo2');
+    todo.title.should.be.equal('Todo1');
   })
 
   it('should get all todos', async () => {
     const todoItem1 = {
-      title: 'Todo1',
+      title: 'Todo2',
       user: {
-        _id: 'xyz'
+        _id: 'def'
       }
     }
     const todoItem2 = {
-      title: 'Todo2',
+      title: 'Todo3',
       user: {
         _id: 'abc'
       }
@@ -37,19 +37,19 @@ describe('Todo Model', () => {
     await Todo.createTodo(todoItem1);
     await Todo.createTodo(todoItem2);
 
-    const allTodo = await Todo.getAll('xyz');
+    const allTodo = await Todo.getAll('abc');
     allTodo.should.have.lengthOf(1);
   })
 
   it('should get only one todo', async () => {
     const todoItem1 = {
-      title: 'Todo1',
+      title: 'Todo4',
       user: {
         _id: 'xyz'
       }
     }
     const todoItem2 = {
-      title: 'Todo2',
+      title: 'Todo5',
       user: {
         _id: 'abc'
       }
@@ -63,13 +63,13 @@ describe('Todo Model', () => {
   })
   it('should return an updated todo', async () => {
     const todoItem1 = {
-      title: 'Todo1',
+      title: 'Todo6',
       user: {
         _id: 'xyz'
       }
     }
     const todoItem2 = {
-      title: 'Todo2',
+      title: 'Todo7',
       user: {
         _id: 'abc'
       }
@@ -78,21 +78,21 @@ describe('Todo Model', () => {
     const todo2 = await Todo.createTodo(todoItem2);
 
     const newTodo = {
-      title: 'Todo3',
+      title: 'Todo6 updated',
     }
 
-    const updateTodo = await Todo.updateTodo(newTodo,todo1._id)
-    updateTodo.title.should.be.equal('Todo3');
+    const updateTodo = await Todo.updateTodo(newTodo, todo1._id)
+    updateTodo.title.should.be.equal('Todo6 updated');
   })
   it('should return a number of deleted a todo', async () => {
     const todoItem1 = {
-      title: 'Todo1',
+      title: 'Todo8',
       user: {
         _id: 'xyz'
       }
     }
     const todoItem2 = {
-      title: 'Todo2',
+      title: 'Todo9',
       user: {
         _id: 'abc'
       }

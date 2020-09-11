@@ -21,6 +21,16 @@ module.exports = {
       });
     });
   },
+  removeUserTodo: (userid) => {
+    console.log(userid)
+    return new Promise((resolve, reject) => {
+      todoCollection.remove({ createdBy: { _id: userid } }, { multi: true }, function (err, numRemoved) {
+        if (err) reject(err);
+        resolve(numRemoved);
+      });
+
+    })
+  },
   createTodo: (data) => {
     let todoItem = {
       title: data.title,

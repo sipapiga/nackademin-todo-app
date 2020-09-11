@@ -2,3 +2,5 @@
 {"firstName":"Admin","lastName":"Admin","email":"admin@todo.se","role":"admin","username":"admin","password":"$2a$10$FYAYgTKYDl0gzlRUJfoAM.HkEhlyGgHixj7L43fOEAL/S7ge3MVGm","_id":"JYq13f6i7ysMQLRi","createdAt":{"$$date":1598604061151},"updatedAt":{"$$date":1598604061151}}
 {"firstName":"Pat","lastName":"Prasopsap","username":"sipapiga","password":"$2a$10$HJSPq33fGOkr8s5AzDV6ZeoGlHtBViFJYDHPQ14oJPQONpaqjbJxm","_id":"Wlx8G3vvKr3SvRB8","createdAt":{"$$date":1598425505930},"updatedAt":{"$$date":1598425505930}}
 {"firstName":"Kalle","lastName":"Olsson","username":"kalle14","password":"$2a$10$lpY6LmrqJmGCn7FTXw1Q4.5U6AMT/URKdgl2nUvFBAV1GB0JmyUw2","_id":"piE1bi8O9FXpovVa","createdAt":{"$$date":1598559260148},"updatedAt":{"$$date":1598559260148}}
+{"firstName":"TestUser","lastName":"TestUser","email":"TestUser@todo.se","role":"admin","username":"TestUser","password":"$2a$10$h0EbV80uWNIe.e2msx7Hq.IDRJwpwGvM8eKIQTuw4ps0Tgo.pPS.O","_id":"nNYaCQ6ZMdkD18vT","createdAt":{"$$date":1599831556056},"updatedAt":{"$$date":1599831556056}}
+{"$$deleted":true,"_id":"nNYaCQ6ZMdkD18vT"}

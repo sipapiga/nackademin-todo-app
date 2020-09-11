@@ -49,6 +49,15 @@ module.exports = {
       });
     });
   },
+  deleteUser: (id) => {
+    return new Promise((resolve, reject) => {
+      userCollection.remove({ _id: id }, { multi: true }, function (err, numRemoved) {
+        if (err) reject(err);
+        resolve(numRemoved);
+      });
+
+    })
+  },
   getSignedJwtToken: (user) => {
     return jwt.sign(user, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRE

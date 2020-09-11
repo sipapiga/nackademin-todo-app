@@ -1,4 +1,5 @@
 const MyModel = require('../models/todo.js');
+const todolistModel = require('../models/todolist');
 
 module.exports = {
   getAll: async (req, res) => {
@@ -13,7 +14,20 @@ module.exports = {
         const result = await MyModel.getTodo(id)
         res.status(200).json(result);
       } catch (err) {
-        res.status(400).json({err: err.message});
+        res.status(400).json({ err: err.message });
+      }
+    } else {
+      res.status(400).json(`${id} not found`);
+    }
+  },
+  getUserTodo: async (req, res) => {
+    let { userid } = req.params;
+    if (userid) {
+      try {
+        const result = await MyModel.getTodo(userid)
+        res.status(200).json(result);
+      } catch (err) {
+        res.status(400).json({ err: err.message });
       }
     } else {
       res.status(400).json(`${id} not found`);
@@ -29,6 +43,9 @@ module.exports = {
           message: 'Todo Created',
           data: result
         });
+
+        await todolistModel.getTodolist(result.todolistId)
+        await todolistModel.addTodoInList(result)
       } catch (err) {
         res.status(400).json('Something went wrong');
       }
@@ -68,11 +85,17 @@ module.exports = {
     let { id } = req.params;
     if (id) {
       try {
-        let result = await MyModel.deleteTodo(id)
+        const result = await MyModel.deleteTodo(id)
+        console.log('result', result)
+     /*    const todolist = await todolistModel.getTodolist(id)
+        console.log('todolist', todolist)
+
+        await todolistModel.removeTodoInList(id) */
         res.status(200).json({
           message: 'Todo Deleted',
           data: result
         })
+
       } catch (err) {
         res.status(400).json('Something went wrong');
       }

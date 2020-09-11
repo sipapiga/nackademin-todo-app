@@ -3,7 +3,7 @@ const todolistModel = require('../models/todolist')
 module.exports = {
   createTodolist: async (req, res) => {
     let todo = req.body;
-    //  req.body.user = req.user
+    req.body.createdBy = req.user
     if (todo) {
       try {
         const result = await todolistModel.createTodolist(req.body);
@@ -63,7 +63,20 @@ module.exports = {
       res.status(400).json(`${id} not found`);
     }
   },
-  deleteTodolist: () => {
-
+  deleteTodolist: async (req, res) => {
+    let { id } = req.params;
+    if (id) {
+      try {
+        let result = await todolistModel.deleteTodolist(id)
+        res.status(200).json({
+          message: 'Todolist Deleted',
+          data: result
+        })
+      } catch (err) {
+        res.status(400).json('Something went wrong');
+      }
+    } else {
+      res.status(400).json(`${id} not found`);
+    }
   }
 }

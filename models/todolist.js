@@ -10,6 +10,23 @@ module.exports = {
     })
 
   },
+  addTodoInList: (todos) => {
+    return new Promise((resolve, reject) => {
+      todolistCollection.update({ _id: todos.todolistId }, { $push: { todos: todos } }, { returnUpdatedDocs: true }, (err, numReplaced, updated) => {
+        if (err) reject(err);
+        resolve(updated);
+      });
+    })
+  },
+  removeTodoInList: (id) => {
+    console.log(id)
+    return new Promise((resolve, reject) => {
+      todolistCollection.update({ _id: id }, { $pull: { todos: id } }, { returnUpdatedDocs: true }, (err, numReplaced, updated) => {
+        if (err) reject(err);
+        resolve(updated);
+      });
+    })
+  },
   getAll: (username) => {
     return new Promise((resolve, reject) => {
       todolistCollection.find({ "creator": username }, (err, docs) => {
@@ -38,6 +55,7 @@ module.exports = {
     })
   },
   deleteTodolist: (id) => {
+
     return new Promise((resolve, reject) => {
       todolistCollection.remove({ _id: id }, { multi: true }, function (err, numRemoved) {
         if (err) reject(err);

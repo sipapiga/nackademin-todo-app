@@ -85,12 +85,10 @@ module.exports = {
     let { id } = req.params;
     if (id) {
       try {
+        const todo = await MyModel.getTodo(id)
         const result = await MyModel.deleteTodo(id)
-        console.log('result', result)
-     /*    const todolist = await todolistModel.getTodolist(id)
-        console.log('todolist', todolist)
-
-        await todolistModel.removeTodoInList(id) */
+        const deletetodo = await todolistModel.removeTodoFromList(todo)
+        console.log('deletetodo',deletetodo)
         res.status(200).json({
           message: 'Todo Deleted',
           data: result

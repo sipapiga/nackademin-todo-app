@@ -1,7 +1,4 @@
-
-const Api = axios.create({
-  baseURL: 'http://localhost:3000/api/'
-});
+import { Api } from './service.js';
 
 Api.interceptors.request.use(
 function(config) {
@@ -20,27 +17,32 @@ Vue.component('Navbar', {
   name: 'navbar',
   template:
     `
-  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #223e56;">
-      <a class="navbar-brand" href="#">Todo App</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+    <div>
+    <b-navbar toggleable="lg" type="dark"  style="background-color: #223e56;">
+      <b-navbar-brand href="#">Todo App</b-navbar-brand>
+  
+      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+  
+      <b-collapse id="nav-collapse" is-nav>
+        <b-navbar-nav>
+          <b-nav-item href="#">Todo</b-nav-item>
+          <b-nav-item href="/admin" v-if="user.userRole === 'admin'">Admin</b-nav-item>
+        </b-navbar-nav>
 
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="/">Todo <span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/admin" v-if="user.userRole === 'admin'" >Admin</a>
-          </li>
-        </ul>
-      </div>
-      <form class="form-inline my-2 my-lg-0">
-        <button class="btn btn-success my-2 my-sm-0" type="submit" v-if=user.user v-on:click="removeToken" >Logout</button>
-      </form>
-    </nav>
+        <b-navbar-nav class="ml-auto">
+          <b-nav-item-dropdown right v-if=user.user>
+            <!-- Using 'button-content' slot -->
+            <template v-slot:button-content>
+              <em>{{user.user.data.firstName}}</em>
+            </template>
+            <b-dropdown-item ><router-link to="/profile">Profile</router-link></b-dropdown-item>
+            <b-dropdown-item v-on:click="removeToken"><router-link to="/">Sign Out</router-link></b-dropdown-item>
+          </b-nav-item-dropdown>
+        </b-navbar-nav>
+      </b-collapse>
+    </b-navbar>
+  </div>
+
 
   `,
   props: ['user'],
@@ -241,7 +243,7 @@ Vue.component('Todo', {
   }
 })
 
-Vue.component('Login', {
+const Login = Vue.component('Login', {
   name: 'Login',
   template:
     `
@@ -342,11 +344,23 @@ Vue.component('Login', {
   }
 })
 
+const Profile = { template: '<div>profile</div>' }
+const routes = [
+  { path: '/profile', component: Profile },
+  { path: '/', component: Login },
+]
+const router = new VueRouter({
+  routes, // short for `routes: routes`
+  mode: 'history',
+  base: '/'
+})
+
 const app = new Vue({
   el: '#app',
   data: {
     seen: false,
     user: null,
     userRole :null
-  }
+  },
+  router
 })

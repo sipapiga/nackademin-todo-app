@@ -18,18 +18,27 @@ module.exports = {
       });
     })
   },
-  removeTodoInList: (id) => {
-    console.log(id)
+  removeTodoFromList: (todo) => {
     return new Promise((resolve, reject) => {
-      todolistCollection.update({ _id: id }, { $pull: { todos: id } }, { returnUpdatedDocs: true }, (err, numReplaced, updated) => {
+      todolistCollection.update({ _id: todo.todolistId }, { $pull: { todos: todo } }, { returnUpdatedDocs: true }, (err, numReplaced, updated) => {
         if (err) reject(err);
         resolve(updated);
       });
     })
   },
-  getAll: (username) => {
+  removeTodolistWhenDeleteUser: (userid) => {
+    console.log(userid)
     return new Promise((resolve, reject) => {
-      todolistCollection.find({ "creator": username }, (err, docs) => {
+      todolistCollection.remove({ "createdBy._id":  userid }, { multi: true }, function (err, numRemoved) {
+        if (err) reject(err);
+        resolve(numRemoved);
+      });
+
+    })
+  },
+  getAll: (id) => {
+    return new Promise((resolve, reject) => {
+      todolistCollection.find({ "createdBy._id": id }, (err, docs) => {
         if (err) reject(err);
         resolve(docs);
       });

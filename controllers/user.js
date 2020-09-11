@@ -12,8 +12,8 @@ module.exports = {
     if (id) {
       try {
         const result = await user.deleteUser(id)
-        const removeusertodo = await TodoModel.removeUserTodo(id)
-        console.log('removeusertodo',removeusertodo)
+        await TodoModel.removeTodoWhenDeleteUser(id)
+        await todolistModel.removeTodolistWhenDeleteUser(id)
         res.status(200).json({
           message: 'User Deleted',
           data: result

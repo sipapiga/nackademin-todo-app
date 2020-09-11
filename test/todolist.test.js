@@ -71,19 +71,23 @@ describe('TodoList Model', function () {
     //create todoList
     const todoList = {
       title: 'List1',
-      creator: 'Pat',
+      createdBy: {
+        _id: 'Pat'
+      },
       todos: [this.todo1, this.todo2]
     }
 
     const todoList2 = {
       title: 'List2',
-      creator: 'Pat',
+      createdBy: {
+        _id: 'Pat'
+      },
       todos: [this.todo1, this.todo2]
     }
 
     const todoList3 = {
       title: 'List3',
-      creator: 'Kalle',
+      createdBy: 'Kalle',
       todos: [this.todo1, this.todo2]
     }
 

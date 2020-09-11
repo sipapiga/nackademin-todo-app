@@ -21,10 +21,19 @@ module.exports = {
       });
     });
   },
-  removeUserTodo: (userid) => {
+  removeTodoWhenDeleteUser: (userid) => {
     console.log(userid)
     return new Promise((resolve, reject) => {
-      todoCollection.remove({ createdBy: { _id: userid } }, { multi: true }, function (err, numRemoved) {
+      todoCollection.remove({ "createdBy._id":  userid }, { multi: true }, function (err, numRemoved) {
+        if (err) reject(err);
+        resolve(numRemoved);
+      });
+
+    })
+  },
+  removeTodoWhenDeleteTodolist: (listID) => {
+    return new Promise((resolve, reject) => {
+      todoCollection.remove({todolistId:  listID }, { multi: true }, function (err, numRemoved) {
         if (err) reject(err);
         resolve(numRemoved);
       });

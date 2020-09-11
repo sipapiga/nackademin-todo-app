@@ -1,4 +1,5 @@
 const todolistModel = require('../models/todolist')
+const todoModel = require('../models/todo.js');
 
 module.exports = {
   createTodolist: async (req, res) => {
@@ -18,8 +19,10 @@ module.exports = {
       res.status(400).json('Invalid request')
     }
   },
-  getAll: () => {
-
+  getAll: async (req, res) => {
+    const result = await todolistModel.getAll(req.user._id);
+    console.log('result',result)
+    res.status(200).json(result);
   },
   getTodolist: async (req, res) => {
     let { id } = req.params;
@@ -67,7 +70,9 @@ module.exports = {
     let { id } = req.params;
     if (id) {
       try {
-        let result = await todolistModel.deleteTodolist(id)
+        const result = await todolistModel.deleteTodolist(id)
+        await todoModel.removeTodoWhenDeleteTodolist(id)
+
         res.status(200).json({
           message: 'Todolist Deleted',
           data: result

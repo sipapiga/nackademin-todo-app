@@ -69,7 +69,10 @@ module.exports = {
 
     if (id) {
       try {
+        const todo = await MyModel.getTodo(id)
         const result = await MyModel.updateTodo(newTodo, id);
+        await todolistModel.removeTodoFromList(todo)
+        await todolistModel.addTodoInList(result)
         res.status(200).json({
           message: 'Todo Updated',
           data: result
@@ -87,8 +90,7 @@ module.exports = {
       try {
         const todo = await MyModel.getTodo(id)
         const result = await MyModel.deleteTodo(id)
-        const deletetodo = await todolistModel.removeTodoFromList(todo)
-        console.log('deletetodo',deletetodo)
+        await todolistModel.removeTodoFromList(todo)
         res.status(200).json({
           message: 'Todo Deleted',
           data: result

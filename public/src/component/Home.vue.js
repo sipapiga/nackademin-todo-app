@@ -15,12 +15,18 @@ export const Home = Vue.component('Home', {
               <b-col v-if="edit === true"> <input v-model= todolist.title type="text" class="form-control border-secondary mb-1" @keyup.enter="editTodolist(todolist._id)"></b-col>
               <b-col v-else> <h2>{{todolist.title}}</h2></b-col>
                 <b-col class="text-right">
-                  <b-button size="sm" @click="addMoreTodo()" variant="info"><i class="fas fa-plus"></i></b-button>
-                  <b-button size="sm" @click="enterEditTodolist()" variant="warning"><i class="fas fa-edit"></i></b-button>
-                  <b-button size="sm" @click="confirmDelTodo(todolist._id)" class="btn btn btn-danger"><i class="fas fa-trash-alt"></i></b-button>
+                  <b-button v-b-toggle="'collapse-2'"  v-b-tooltip.hover title="Add more todos" size="sm" variant="info"><i class="fas fa-plus"></i></b-button>
+                  <b-button size="sm" @click="enterEditTodolist()" variant="warning" v-b-tooltip.hover title="Edit todolist title"><i class="fas fa-edit"></i></b-button>
+                  <b-button size="sm" @click="confirmDelTodo(todolist._id)" class="btn btn btn-danger" v-b-tooltip.hover title="Delete todolist"><i class="fas fa-trash-alt"></i></b-button>
 
                 </b-col>
-              </b-row>  
+                </b-row>  
+                <b-collapse id="collapse-2">
+                  <div class="input-group mb-3">
+                    <input type="text" class="form-control border-secondary mb-1" v-model='newTodo.title' placeholder="Add Todo" @keyup.enter="addTodo(todolist._id)"
+                    aria-label="todo-title">
+                  </div>
+                </b-collapse>
             </b-container>
          
               <b-table :hover=true :head-variant="dark" :items="todolist.todos" :fields="fields" :sort-by.sync="sortBy"
@@ -44,7 +50,7 @@ export const Home = Vue.component('Home', {
                 </template>
                 <template v-slot:cell(actions)="data">
                   <b-button size="sm" @click="editTodo(data)" variant="warning"><i class="fas fa-edit"></i>
-                    <b-modal ref="edit-Modal" title="Edit Todo">
+                    <b-modal v-model="modalShow" hide-backdrop content-class="shadow" title="Edit Todo">
                       <b-form-group id="input-edit" label="Todo Title:" label-for="input-1">
                         <b-form-input v-if="todo" id="input-edit" v-model="todo.data.title"></b-form-input>
                       </b-form-group>
@@ -67,10 +73,10 @@ export const Home = Vue.component('Home', {
   props: ['user'],
   data () {
     return {
+      modalShow: false,
       todolists: [],
       newTodo: {
-        title: null,
-        done: false
+        title: null
       },
       todo: null,
       feedback: null,
@@ -104,15 +110,17 @@ export const Home = Vue.component('Home', {
     }
   },
   methods: {
-    async addTodo () {
+    async addTodo (id) {
       console.log('click')
-      let title = this.newTodo.title;
+      const title = this.newTodo.title;
+      const todolistId = id
       if (title == null || title == '') {
         this.feedback = 'Please add your task!'
       } else {
         try {
           await Api.post('todos', {
-            title
+            title,
+            todolistId
           })
             .then(res => {
               if (res.status === 201) {
@@ -133,7 +141,7 @@ export const Home = Vue.component('Home', {
     },
     async editTodo (data) {
       const id = data.item._id
-      this.$refs['edit-Modal'].show()
+      this.modalShow = true
       this.todo = await Api.get(`todos/${id}`)
     },
     async saveEdit (id) {
@@ -148,8 +156,8 @@ export const Home = Vue.component('Home', {
           })
             .then(res => {
               if (res.status === 200) {
-                this.$refs['edit-Modal'].hide()
-                this.fetchTodo()
+                this.modalShow = false
+                this.fetchTodolist()
               }
             })
             .catch(err => console.error(err))

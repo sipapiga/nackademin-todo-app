@@ -41,9 +41,9 @@ module.exports = {
       })
     })
   },
-  getUsers: () => {
+  getUser: (id) => {
     return new Promise((resolve, reject) => {
-      userCollection.find({}, (err, docs) => {
+      userCollection.findOne({ _id: id }, (err, docs) => {
         if (err) reject(err);
         resolve(docs);
       });

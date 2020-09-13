@@ -4,8 +4,8 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/', auth.protect, user.getAll);
-/* 
 router.get('/:id', user.getUser);
+/* 
 router.post('/', user.createUser);
 router.patch('/update/:id', user.updateUser);*/
 

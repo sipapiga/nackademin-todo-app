@@ -3,9 +3,9 @@ const todoModel = require('../models/todo.js');
 
 module.exports = {
   createTodolist: async (req, res) => {
-    let todo = req.body;
-    req.body.createdBy = req.user
-    if (todo) {
+    let todolist = req.body;
+    req.body.user = req.user
+    if (todolist) {
       try {
         const result = await todolistModel.createTodolist(req.body);
         res.status(201).json({
@@ -21,7 +21,6 @@ module.exports = {
   },
   getAll: async (req, res) => {
     const result = await todolistModel.getAll(req.user._id);
-    console.log('result',result)
     res.status(200).json(result);
   },
   getTodolist: async (req, res) => {

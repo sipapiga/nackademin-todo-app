@@ -1,19 +1,23 @@
 import { Api } from './service.js';
+import { Navbar } from '../component/Navbar.vue.js'
+import { Home } from '../component/Home.vue.js'
+import { Login } from '../component/Login.vue.js'
+import { router } from './route.js';
 
-Api.interceptors.request.use(
-function(config) {
-  const token = localStorage.getItem("token"); 
-  if (token) {
-    config.headers["authorization"] = 'Bearer ' + token;
+/* Api.interceptors.request.use(
+  function (config) {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers["authorization"] = 'Bearer ' + token;
+    }
+    return config;
+  },
+  function (error) {
+    return Promise.reject(error);
   }
-  return config;
-},
-function(error) {
-  return Promise.reject(error);
-}
 );
-
-Vue.component('Navbar', {
+ */
+/* Vue.component('Navbar', {
   name: 'navbar',
   template:
     `
@@ -52,9 +56,9 @@ Vue.component('Navbar', {
     }
   }
 })
-
-Vue.component('Todo', {
-  name: 'todo',
+ */
+/* const Home = Vue.component('Home', {
+  name: 'Home',
   template:
     `
   <div class="container content-container">
@@ -114,7 +118,7 @@ Vue.component('Todo', {
       </div>
     </div>
   `,
-  props:['user'],
+  props: ['user'],
   data () {
     return {
       todos: [],
@@ -242,8 +246,8 @@ Vue.component('Todo', {
 
   }
 })
-
-const Login = Vue.component('Login', {
+ */
+/* const Login = Vue.component('Login', {
   name: 'Login',
   template:
     `
@@ -287,7 +291,7 @@ const Login = Vue.component('Login', {
   </div>
 </div>
   `,
-  props:[
+  props: [
     'user'
   ],
   data () {
@@ -322,7 +326,7 @@ const Login = Vue.component('Login', {
             console.log(res.data.data.token)
             localStorage.setItem("token", res.data.token);
             console.log(this.$parent.user)
-
+            router.push({ name: 'Home' })
           }
           this.email = ''
           this.password = ''
@@ -343,24 +347,14 @@ const Login = Vue.component('Login', {
     }
   }
 })
-
-const Profile = { template: '<div>profile</div>' }
-const routes = [
-  { path: '/profile', component: Profile },
-  { path: '/', component: Login },
-]
-const router = new VueRouter({
-  routes, // short for `routes: routes`
-  mode: 'history',
-  base: '/'
-})
-
+ */
 const app = new Vue({
   el: '#app',
   data: {
     seen: false,
     user: null,
-    userRole :null
+    userRole: null
   },
   router
 })
+

@@ -1,9 +1,14 @@
 const { todolistCollection } = require('../database/index');
 
 module.exports = {
-  createTodolist: (todolist) => {
+  createTodolist: (data) => {
+    let todolistItem = {
+      title: data.title,
+      createdBy: data.user,
+      todos: []
+    }
     return new Promise((resolve, reject) => {
-      todolistCollection.insert(todolist, (err, newDoc) => {
+      todolistCollection.insert(todolistItem, (err, newDoc) => {
         if (err) reject(err);
         resolve(newDoc);
       })

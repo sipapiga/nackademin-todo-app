@@ -39,13 +39,13 @@ module.exports = {
     if (todo) {
       try {
         const result = await MyModel.createTodo(req.body);
+        await todolistModel.getTodolist(result.todolistId)
+        await todolistModel.addTodoInList(result)
         res.status(201).json({
           message: 'Todo Created',
           data: result
         });
 
-        await todolistModel.getTodolist(result.todolistId)
-        await todolistModel.addTodoInList(result)
       } catch (err) {
         res.status(400).json('Something went wrong');
       }

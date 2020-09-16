@@ -1,6 +1,35 @@
 const { userCollection } = require('../database/index');
 const bcrypt = require('bcryptjs')
+const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken');
+
+
+const userSchema = new mongoose.Schema({
+  email: {
+    type: String,
+    unique: true
+  },
+  firstName: String,
+  lastName: String,
+  role: {
+    type: String,
+    required: [true, 'Please select a role'],
+  },
+  username: {
+    type: String,
+    unique: true
+  },
+  password: {
+    type: String,
+    select: false,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
+})
+
+const User = mongoose.model('User', userSchema)
 
 module.exports = {
   register: (data) => {
@@ -69,5 +98,8 @@ module.exports = {
         return
       });
     });
-  }
+  },
+  async clear(){
+    return await User.deleteMany({})
+},
 }

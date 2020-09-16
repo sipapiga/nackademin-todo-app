@@ -1,2 +1,3 @@
-{"title":"tenetur laborum commodi","done":false,"createdBy":{"_id":"xyz"},"todolistId":"Fkl5T2GK2qDG1qfI","_id":"vtgWopst1LfF4xqT","createdAt":{"$$date":1600249534001},"updatedAt":{"$$date":1600249534001}}
-{"title":"in eum consequatur","done":false,"createdBy":{"_id":"abc"},"todolistId":"Fkl5T2GK2qDG1qfI","_id":"h8vKzJcYOYuQX95I","createdAt":{"$$date":1600249534019},"updatedAt":{"$$date":1600249534019}}
+{"title":"Todo8","done":false,"createdBy":{"_id":"xyz"},"_id":"vtVqMSm1ZZooGSjo","createdAt":{"$$date":1600254752508},"updatedAt":{"$$date":1600254752508}}
+{"title":"Todo9","done":false,"createdBy":{"_id":"abc"},"_id":"EWjJRQV0I7UQZCUK","createdAt":{"$$date":1600254752529},"updatedAt":{"$$date":1600254752529}}
+{"$$deleted":true,"_id":"vtVqMSm1ZZooGSjo"}

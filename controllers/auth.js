@@ -26,7 +26,7 @@ module.exports = {
   },
   login: async (req, res) => {
     const credentials = req.body
-
+    try {
       const user = await userModel.login({ credentials });
       const token = getSignedJwtToken(user);
       res.status(200).json({
@@ -34,5 +34,8 @@ module.exports = {
         token,
         data: user
       });
+    } catch (err) {
+      res.status(400).json({err: err.message});
     }
+  }
 }

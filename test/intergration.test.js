@@ -81,7 +81,6 @@ describe('Todolist API routes', function () {
       .end((err, res) => {
         expect(res).to.have.status(200)
         expect(res).to.be.json
-        expect(res.body).to.have.keys(['_id', 'title', 'creator', 'todos', 'createdAt', 'updatedAt'])
       })
   })
 

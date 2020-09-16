@@ -30,11 +30,20 @@ export const Home = Vue.component('Home', {
             </b-container>
          
               <b-table :hover=true :head-variant="dark" :items="todolist.todos" :fields="fields" :sort-by.sync="sortBy"
-                :sort-desc.sync="sortDesc" sort-icon-left responsive="sm" class="text-white">
-                <template v-slot:cell(done)="data">
-                <b-form-group>
-                    <input type="checkbox" v-model="data.item.done" />
-                  </b-form-group>
+                :sort-desc.sync="sortDesc" sort-icon-left responsive="sm" class="text-white"  ref="selectableTable"
+                selectable
+                :select-mode="selectMode"
+                @row-selected="onRowSelected"
+                >
+                <template v-slot:cell(done)="{rowSelected }" v-bind:class="{ strikeout :rowSelected.done">
+                  <template v-if="rowSelected">
+                    <span aria-hidden="true">&check;</span>
+                    <span class="sr-only">Selected</span>
+                  </template>
+                  <template v-else>
+                    <span aria-hidden="true">&nbsp;</span>
+                    <span class="sr-only">Not selected</span>
+                  </template>
                 </template>
                 <template class="text-white" v-slot:cell(title)="data">{{ data.value }}</template>
                 <template v-slot:head(title)="data">
@@ -65,6 +74,10 @@ export const Home = Vue.component('Home', {
                       class="fas fa-trash-alt"></i></b-button>
                 </template>
               </b-table>
+              <p>
+                Selected Rows:<br>
+                {{ selected }}
+              </p>
             </div>
         </div>
       </div>
@@ -95,8 +108,10 @@ export const Home = Vue.component('Home', {
       secondary: 'secondary',
       edit: false,
       todolist: {
-        title:null
-      }
+        title: null
+      },
+      selectMode: 'multi',
+      selected: []
 
     }
   },
@@ -105,11 +120,32 @@ export const Home = Vue.component('Home', {
       this.todolists = await Api.get('todolist')
         .then(res => { return res.data })
         .catch(err => console.error(err))
+      this.selected = await Api.get('todos')
+        .then(res => {
+          const todoDone = res.data.filter(function (todo) {
+            if (todo.done) {
+              console.log(todo)
+              return todo
+            }
+          })
+          console.log(todoDone)
+          return todoDone
+        })
+        .catch(err => console.error(err))
     } catch (err) {
       this.error = err.message
     }
   },
   methods: {
+    onRowSelected (items) {
+      this.selected = items
+      const todoDone = this.selected.map(async function (todo) {
+        const response = await Api.patch(`/todos/${todo._id}`, {
+          done: true
+        });
+        console.log(response)
+      })
+    },
     async addTodo (id) {
       console.log('click')
       const title = this.newTodo.title;

@@ -1,5 +1,6 @@
 const Datastore = require('nedb');
 require('dotenv').config();
+console.log(process.env.ENVIRONMENT)
 
 let todoCollection, userCollection, todolistCollection
 switch ((process.env.ENVIRONMENT)) {

@@ -102,6 +102,6 @@ describe('Todo Model', () => {
     //act
     const deleteTodo = await Todo.deleteTodo(todo1._id)
     //assert
-    deleteTodo.should.be.equal(2);
+    deleteTodo.should.be.equal(1);
   })
 })

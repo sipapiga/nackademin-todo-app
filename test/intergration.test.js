@@ -4,7 +4,7 @@ chai.use(chaiHttp)
 const { expect, request } = chai
 const app = require('../app')
 
-const User = require('../models/User')
+const User = require('../models/user')
 const Todolist = require('../models/todolist')
 
 describe('Todolist API routes', function () {

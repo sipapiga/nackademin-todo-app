@@ -70,8 +70,5 @@ module.exports = {
         return
       });
     });
-  },
-  async clear(){
-    return await User.deleteMany({})
-},
+  }
 }

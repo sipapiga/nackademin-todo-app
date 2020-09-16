@@ -1,6 +1,6 @@
 
 export const Api = axios.create({
-  baseURL: 'http://localhost:3000/api/'
+  baseURL: 'https://api-todo-sipr1901.herokuapp.com/api/'
 });
 
 Api.interceptors.request.use(

@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 
 module.exports = {
   register: (data) => {
+    console.log(data)
     let password = data.password
     const salt = bcrypt.genSaltSync(10)
     const hashPass = bcrypt.hashSync(password, salt)

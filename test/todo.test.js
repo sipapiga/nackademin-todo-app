@@ -1,4 +1,4 @@
-const chai = require('chai')
+/* const chai = require('chai')
 chai.should()
 const Todo = require('../models/todo')
 
@@ -104,4 +104,4 @@ describe('Todo Model', () => {
     //assert
     deleteTodo.should.be.equal(1);
   })
-})
+}) */

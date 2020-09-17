@@ -1,9 +1,33 @@
 const { todoCollection } = require('../database/index');
+const mongoose = require('mongoose')
+
+const todoSchema = new mongoose.Schema({
+  title: {
+    type: String
+  },
+  done: {
+    type: Boolean,
+    default: false
+  },
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  todolistId: {
+    type: String
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
+})
+
+const Todo = mongoose.model('Todo', todoSchema)
 
 module.exports = {
   getAll: (userId) => {
     return new Promise((resolve, reject) => {
-      todoCollection.find({ "createdBy._id": userId }, (err, docs) => {
+      Todo.find({ createdBy: userId }, (err, docs) => {
         if (err) reject(err);
         resolve(docs);
       });
@@ -11,7 +35,7 @@ module.exports = {
   },
   getTodo: (id) => {
     return new Promise((resolve, reject) => {
-      todoCollection.findOne({ _id: id }, (err, todo) => {
+      Todo.findOne({ _id: id }, (err, todo) => {
 
         if (err) reject(err);
         if (todo) resolve(todo)
@@ -24,7 +48,7 @@ module.exports = {
   removeTodoWhenDeleteUser: (userid) => {
     console.log(userid)
     return new Promise((resolve, reject) => {
-      todoCollection.remove({ "createdBy._id":  userid }, { multi: true }, function (err, numRemoved) {
+      Todo.remove({ createdBy: userid }, { multi: true }, function (err, numRemoved) {
         if (err) reject(err);
         resolve(numRemoved);
       });
@@ -33,7 +57,7 @@ module.exports = {
   },
   removeTodoWhenDeleteTodolist: (listID) => {
     return new Promise((resolve, reject) => {
-      todoCollection.remove({todolistId:  listID }, { multi: true }, function (err, numRemoved) {
+      Todo.remove({ todolistId: listID }, { multi: true }, function (err, numRemoved) {
         if (err) reject(err);
         resolve(numRemoved);
       });
@@ -41,15 +65,15 @@ module.exports = {
     })
   },
   createTodo: (data) => {
+    console.log(data)
     let todoItem = {
       title: data.title,
-      done: false,
       createdBy: data.user,
       todolistId: data.todolistId
     }
 
     return new Promise((resolve, reject) => {
-      todoCollection.insert(todoItem, (err, newDoc) => {
+      Todo.create(todoItem, (err, newDoc) => {
         if (err) reject(err);
         resolve(newDoc);
       })
@@ -58,7 +82,7 @@ module.exports = {
   updateTodo: (newItems, id) => {
 
     return new Promise((resolve, reject) => {
-      todoCollection.update({ _id: id }, { $set: newItems }, { returnUpdatedDocs: true }, (err, numReplaced, updated) => {
+      Todo.findByIdAndUpdate({ _id: id }, { $set: newItems }, { returnUpdatedDocs: true }, (err, updated) => {
         if (err) reject(err);
         resolve(updated);
       });
@@ -66,7 +90,7 @@ module.exports = {
   },
   deleteTodo: (id) => {
     return new Promise((resolve, reject) => {
-      todoCollection.remove({ _id: id }, { multi: true }, function (err, numRemoved) {
+      Todo.remove({ _id: id }, { multi: true }, function (err, numRemoved) {
         if (err) reject(err);
         resolve(numRemoved);
       });
@@ -74,8 +98,8 @@ module.exports = {
     })
   },
   clearTodo: () => {
-    return todoCollection.remove({}, { multi: true }, function (err, numRemoved) {
-      todoCollection.loadDatabase(function (err) {
+    return Todo.remove({}, { multi: true }, function (err, numRemoved) {
+      Todo.loadDatabase(function (err) {
         return
       });
     });

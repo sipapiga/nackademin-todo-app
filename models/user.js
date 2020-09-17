@@ -3,6 +3,31 @@ const bcrypt = require('bcryptjs')
 const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken');
 
+const userSchema = new mongoose.Schema({
+  firstName: {
+    type: String,
+    required: [true, 'Please add a name'],
+  },
+  username: {
+    type: String,
+    unique: true,
+    required: [true, 'Please add a username'],
+  },
+  password: {
+    type: String
+  },
+  role: {
+    type: String,
+    required: [true, 'Please select a role'],
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
+})
+
+const User = mongoose.model('User', userSchema)
+
 module.exports = {
   register: (data) => {
     console.log(data)
@@ -12,14 +37,13 @@ module.exports = {
 
     const user = {
       firstName: data.firstName,
-      lastName: data.lastName,
-      email: data.email,
       role: data.role,
       username: data.username,
       password: hashPass
     }
     return new Promise((resolve, reject) => {
-      userCollection.insert(user, (err, newDoc) => {
+      User.create(user, (err, newDoc) => {
+        console.log(user)
         if (err) reject(err)
         resolve(newDoc)
       })
@@ -29,7 +53,7 @@ module.exports = {
     const username = data.credentials.username
 
     return new Promise((resolve, reject) => {
-      userCollection.findOne({ username }, (err, user) => {
+      User.findOne({ username }, (err, user) => {
         if (!user) reject(new Error('User not found'))
         else {
           const passwordAttempt = data.credentials.password
@@ -45,7 +69,7 @@ module.exports = {
   },
   getUser: (id) => {
     return new Promise((resolve, reject) => {
-      userCollection.findOne({ _id: id }, (err, docs) => {
+      User.findOne({ _id: id }, (err, docs) => {
         if (err) reject(err);
         resolve(docs);
       });
@@ -53,7 +77,7 @@ module.exports = {
   },
   deleteUser: (id) => {
     return new Promise((resolve, reject) => {
-      userCollection.remove({ _id: id }, { multi: true }, function (err, numRemoved) {
+      User.remove({ _id: id }, { multi: true }, function (err, numRemoved) {
         if (err) reject(err);
         resolve(numRemoved);
       });
@@ -66,8 +90,8 @@ module.exports = {
     });
   },
   clear: () => {
-    return userCollection.remove({}, { multi: true }, function (err, numRemoved) {
-      userCollection.loadDatabase(function (err) {
+    return User.remove({}, { multi: true }, function (err, numRemoved) {
+      User.loadDatabase(function (err) {
         return
       });
     });

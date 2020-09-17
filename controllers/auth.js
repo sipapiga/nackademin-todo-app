@@ -18,6 +18,7 @@ module.exports = {
           data: result
         });
       } catch (err) {
+        console.log(err)
         res.status(400).json('Something wrong!');
       }
     } else {
@@ -28,13 +29,14 @@ module.exports = {
     const credentials = req.body
     try {
       const user = await userModel.login({ credentials });
-      const token = getSignedJwtToken(user);
+      const token = getSignedJwtToken(user.toJSON());
       res.status(200).json({
         message: 'Success',
         token,
         data: user
       });
     } catch (err) {
+      console.log(err)
       res.status(400).json({err: err.message});
     }
   }

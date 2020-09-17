@@ -4,20 +4,22 @@ require('dotenv').config();
 
 
 
-let todoCollection, userCollection, todolistCollection,mongoDatabase
+let todoCollection, userCollection, todolistCollection, mongoDatabase
 switch ((process.env.ENVIRONMENT)) {
   case 'development':
-    todoCollection = new Datastore({ filename: 'database/todo.db', autoload: true, timestampData: true });
-    userCollection = new Datastore({ filename: 'database/user.db', autoload: true, timestampData: true });
-    todolistCollection = new Datastore({ filename: 'database/todolist.db', autoload: true, timestampData: true });
+    /*   todoCollection = new Datastore({ filename: 'database/todo.db', autoload: true, timestampData: true });
+      userCollection = new Datastore({ filename: 'database/user.db', autoload: true, timestampData: true });
+      todolistCollection = new Datastore({ filename: 'database/todolist.db', autoload: true, timestampData: true }); */
     break;
   case 'test':
-    todoCollection = new Datastore({ filename: 'database/test-todo.db', autoload: true, timestampData: true });
-    userCollection = new Datastore({ filename: 'database/test-user.db', autoload: true, timestampData: true });
-    todolistCollection = new Datastore({ filename: 'database/test-todolist.db', autoload: true, timestampData: true });
-    todoCollection.remove({})
-    userCollection.remove({})
-    todolistCollection.remove({})
+    /*  mongoDatabase = {
+       // mongodb+srv://user:password@host/dbname
+       getUri: async () =>
+         `mongodb://127.0.0.1:27017/Nackademin-todo-test`
+     }
+  */
+    const { MongoMemoryServer } = require('mongodb-memory-server')
+    mongoDatabase = new MongoMemoryServer()
     break;
   case 'production':
   case 'staging':
@@ -30,29 +32,39 @@ switch ((process.env.ENVIRONMENT)) {
 
 }
 
-async function connect(){
-    
-  let uri = await mongoDatabase.getUri()
+async function connect () {
+  let uri
+  if (process.env.ENVIRONMENT == 'test'){
+    uri = await mongoDatabase.getConnectionString()
+  } else{
+    uri = await mongoDatabase.getUri()
+  }
+  console.log(uri)
 
-  await mongoose.connect(uri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useFindAndModify: false,
-      useCreateIndex: true
+  let conn = await mongoose.connect(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
   })
   console.log(`Connected to ${conn.connection.host}`)
 }
 
-async function disconnect(){
-  if(process.env.ENVIRONMENT == 'test' || process.env.ENVIRONMENT == 'development'){
-      await mongoDatabase.stop()
+async function disconnect () {
+  if (process.env.ENVIRONMENT == 'test' || process.env.ENVIRONMENT == 'development') {
+    await mongoDatabase.stop()
+    //await mongoose.connection.close()
   }
-  await mongoose.disconnect()
+  await mongoose.connection.close()
+}
+
+async function clearDatabase () {
+  const collections = mongoose.connection.collections;
+
+  for (const key in collections) {
+    const collection = collections[key];
+    await collection.deleteMany();
+  }
 }
 
 module.exports = {
-  todoCollection,
-  userCollection,
-  todolistCollection,
-  connect, disconnect
+  connect, disconnect, clearDatabase
 }

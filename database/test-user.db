@@ -1,2 +1,3 @@
 {"firstName":"Rosalee","lastName":"Stroman","email":"email63110@gmail.com","role":"admin","username":"Lia_Douglas","password":"$2a$10$qej7C29bUBnfSO/.kkexeuS90f0FqdNiYlmPipJVqYuSGB7dFU4xG","_id":"T4Syr2rgxII9HDdN","createdAt":{"$$date":1600256639029},"updatedAt":{"$$date":1600256639029}}
 {"firstName":"Eriberto","lastName":"Grimes","email":"email91994@gmail.com","role":"user","username":"Stephen.Walker","password":"$2a$10$z2aKOjkWlSGtbL42GxX5h.I7Jl3PVXTT2Tc/zDBe3CMkrKK3glGCa","_id":"mGWK9Drcn8aVW40k","createdAt":{"$$date":1600256639154},"updatedAt":{"$$date":1600256639154}}
+{"$$deleted":true,"_id":"T4Syr2rgxII9HDdN"}

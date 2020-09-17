@@ -1,5 +1,29 @@
 const { todolistCollection } = require('../database/index');
 
+const mongoose = require('mongoose')
+
+const todolistSchema = new mongoose.Schema({
+  title: {
+    type: String
+  },
+  todos: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Todo'
+    }
+  ],
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
+})
+
+const Todolist = mongoose.model('Todolist', todolistSchema)
+
 module.exports = {
   createTodolist: (data) => {
     let todolistItem = {
@@ -8,70 +32,79 @@ module.exports = {
       todos: []
     }
     return new Promise((resolve, reject) => {
-      todolistCollection.insert(todolistItem, (err, newDoc) => {
+      Todolist.create(todolistItem, (err, newDoc) => {
         if (err) reject(err);
         resolve(newDoc);
       })
     })
 
   },
-  addTodoInList: (todos) => {
-    return new Promise((resolve, reject) => {
-      todolistCollection.update({ _id: todos.todolistId }, { $push: { todos: todos } }, { returnUpdatedDocs: true }, (err, numReplaced, updated) => {
-        if (err) reject(err);
-        resolve(updated);
-      });
-    })
+  addTodoInList: async (todo) => {
+    try {
+      return await Todolist.findOneAndUpdate({ _id: todo.todolistId }, { $push: { todos: todo } }, {
+        new: true,
+        runValidators: true
+      })
+    } catch (err) {
+      throw err
+    }
   },
-  removeTodoFromList: (todo) => {
-    return new Promise((resolve, reject) => {
-      todolistCollection.update({ _id: todo.todolistId }, { $pull: { todos: todo } }, { returnUpdatedDocs: true }, (err, numReplaced, updated) => {
-        if (err) reject(err);
-        resolve(updated);
-      });
-    })
+  removeTodoFromList: async (todo) => {
+    try {
+      return await Todolist.findOneAndUpdate({ _id: todo.todolistId._id }, { $pull: { todos: todo } }, {
+        new: true,
+        runValidators: true
+      })
+    } catch (err) {
+      throw err
+    }
   },
   removeTodolistWhenDeleteUser: (userid) => {
     console.log(userid)
     return new Promise((resolve, reject) => {
-      todolistCollection.remove({ "createdBy._id":  userid }, { multi: true }, function (err, numRemoved) {
+      Todolist.remove({ createdBy: userid }, { multi: true }, function (err, numRemoved) {
         if (err) reject(err);
         resolve(numRemoved);
       });
 
     })
   },
-  getAll: (id) => {
+  getAll: (userId) => {
     return new Promise((resolve, reject) => {
-      todolistCollection.find({ "createdBy._id": id }, (err, docs) => {
+      Todolist.find({ createdBy: userId }, (err, docs) => {
         if (err) reject(err);
         resolve(docs);
+      }).populate({
+        path: 'todos',
+        model: 'Todo'
       });
     });
   },
   getTodolist: (id) => {
     return new Promise((resolve, reject) => {
-      todolistCollection.findOne({ _id: id }, (err, todolist) => {
+      Todolist.findOne({ _id: id }, (err, todolist) => {
         if (err) reject(err);
         if (todolist) resolve(todolist)
         else {
           reject(new Error(`${id} not found`))
         }
+      }).populate({
+        path: 'todos',
+        model: 'Todo'
       });
     });
   },
   updateTodolist: (newtodoList, id) => {
     return new Promise((resolve, reject) => {
-      todolistCollection.update({ _id: id }, { $set: newtodoList }, { returnUpdatedDocs: true }, (err, numReplaced, updated) => {
+      Todolist.findOneAndUpdate({ _id: id }, { $set: newtodoList }, { returnUpdatedDocs: true }, (err, numReplaced, updated) => {
         if (err) reject(err);
         resolve(updated);
       });
     })
   },
   deleteTodolist: (id) => {
-
     return new Promise((resolve, reject) => {
-      todolistCollection.remove({ _id: id }, { multi: true }, function (err, numRemoved) {
+      Todolist.remove({ _id: id }, { multi: true }, function (err, numRemoved) {
         if (err) reject(err);
         resolve(numRemoved);
       });
@@ -79,8 +112,8 @@ module.exports = {
     })
   },
   clearTodolist: () => {
-    return todolistCollection.remove({}, { multi: true }, function (err, numRemoved) {
-      todolistCollection.loadDatabase(function (err) {
+    return Todolist.remove({}, { multi: true }, function (err, numRemoved) {
+      Todolist.loadDatabase(function (err) {
         return
       });
     });

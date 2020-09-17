@@ -4,6 +4,7 @@ const todolistModel = require('../models/todolist');
 module.exports = {
   getAll: async (req, res) => {
     const userID = req.user._id
+    console.log(userID)
     const result = await MyModel.getAll(userID);
     res.status(200).json(result);
   },
@@ -39,7 +40,7 @@ module.exports = {
     if (todo) {
       try {
         const result = await MyModel.createTodo(req.body);
-        await todolistModel.getTodolist(result.todolistId)
+//        await todolistModel.getTodolist(result.todolistId)
         await todolistModel.addTodoInList(result)
         res.status(201).json({
           message: 'Todo Created',
@@ -47,6 +48,7 @@ module.exports = {
         });
 
       } catch (err) {
+        console.log(err)
         res.status(400).json('Something went wrong');
       }
     } else {
@@ -69,15 +71,19 @@ module.exports = {
 
     if (id) {
       try {
-        const todo = await MyModel.getTodo(id)
+      //  const todo = await MyModel.getTodo(id)
         const result = await MyModel.updateTodo(newTodo, id);
-        await todolistModel.removeTodoFromList(todo)
-        await todolistModel.addTodoInList(result)
+        console.log('here1')
+     //   const removedtodo = await todolistModel.removeTodoFromList(todo)
+        console.log('here2')
+      //  console.log(removedtodo)
+       // await todolistModel.addTodoInList(result)
         res.status(200).json({
           message: 'Todo Updated',
           data: result
         });
       } catch (err) {
+        console.log(err)
         res.status(400).json('Something went wrong');
       }
     } else {
@@ -90,7 +96,7 @@ module.exports = {
       try {
         const todo = await MyModel.getTodo(id)
         const result = await MyModel.deleteTodo(id)
-        await todolistModel.removeTodoFromList(todo)
+    //    await todolistModel.removeTodoFromList(todo)
         res.status(200).json({
           message: 'Todo Deleted',
           data: result

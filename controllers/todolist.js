@@ -20,7 +20,9 @@ module.exports = {
     }
   },
   getAll: async (req, res) => {
-    const result = await todolistModel.getAll(req.user._id);
+    const userID = req.user._id
+    console.log(userID)
+    const result = await todolistModel.getAll(userID);
     res.status(200).json(result);
   },
   getTodolist: async (req, res) => {

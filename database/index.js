@@ -12,14 +12,14 @@ switch ((process.env.ENVIRONMENT)) {
       todolistCollection = new Datastore({ filename: 'database/todolist.db', autoload: true, timestampData: true }); */
     break;
   case 'test':
-    /*  mongoDatabase = {
+      mongoDatabase = {
        // mongodb+srv://user:password@host/dbname
        getUri: async () =>
          `mongodb://127.0.0.1:27017/Nackademin-todo-test`
      }
-  */
-    const { MongoMemoryServer } = require('mongodb-memory-server')
-    mongoDatabase = new MongoMemoryServer()
+  
+  /*   const { MongoMemoryServer } = require('mongodb-memory-server')
+    mongoDatabase = new MongoMemoryServer({ binary: { version: '4.4.1' } }) */
     break;
   case 'production':
   case 'staging':
@@ -33,13 +33,8 @@ switch ((process.env.ENVIRONMENT)) {
 }
 
 async function connect () {
-  let uri
-  if (process.env.ENVIRONMENT == 'test'){
-    uri = await mongoDatabase.getConnectionString()
-  } else{
-    uri = await mongoDatabase.getUri()
-  }
-  console.log(uri)
+
+  let uri = await mongoDatabase.getUri()
 
   let conn = await mongoose.connect(uri, {
     useNewUrlParser: true,
@@ -50,7 +45,7 @@ async function connect () {
 
 async function disconnect () {
   if (process.env.ENVIRONMENT == 'test' || process.env.ENVIRONMENT == 'development') {
-    await mongoDatabase.stop()
+    await mongoose.connection.close()
     //await mongoose.connection.close()
   }
   await mongoose.connection.close()

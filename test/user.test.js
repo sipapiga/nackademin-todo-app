@@ -6,9 +6,13 @@ describe('Auth', function () {
   before(async () => {
     await Database.connect()
   })
-
+ 
   after(async () => {
     await Database.disconnect()
+  })
+
+  beforeEach(async()=>{
+    await Database.clearDatabase()
   })
 
   it('should return an object of registed user', async function () {
@@ -25,7 +29,7 @@ describe('Auth', function () {
     expect(createUser.username).to.equal('Lia_Douglas');
   })
 
-  /* it('Auth-login', async function () {
+   it('Auth-login', async function () {
   
     const user = {
       firstName: 'Pat',
@@ -50,5 +54,5 @@ describe('Auth', function () {
     const loginUser = await User.login({ credentials })
     //assert 
     expect(loginUser.username).to.equal('Stephen.Walker');
-  }) */
+  })
 })

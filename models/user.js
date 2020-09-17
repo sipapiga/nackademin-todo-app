@@ -29,25 +29,29 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model('User', userSchema)
 
 module.exports = {
-  register: (data) => {
+  register: async (data) => {
     console.log(data)
     let password = data.password
     const salt = bcrypt.genSaltSync(10)
     const hashPass = bcrypt.hashSync(password, salt)
 
-    const user = {
+    const userRegister = {
       firstName: data.firstName,
       role: data.role,
       username: data.username,
       password: hashPass
     }
-    return new Promise((resolve, reject) => {
-      User.create(user, (err, newDoc) => {
-        console.log(user)
-        if (err) reject(err)
-        resolve(newDoc)
-      })
-    })
+    console.log(userRegister)
+    const user = await User.create(userRegister)
+    return user._doc
+
+    /*  return new Promise((resolve, reject) => {
+       User.create(user, (err, newDoc) => {
+         console.log(user)
+         if (err) reject(err)
+         resolve(newDoc)
+       })
+     }) */
   },
   login: (data) => {
     const username = data.credentials.username

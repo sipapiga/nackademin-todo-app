@@ -15,13 +15,10 @@ const todoSchema = new mongoose.Schema({
   },
   todolistId: {
     type: String
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
   }
 })
 
+todoSchema.set('timestamps', true)
 const Todo = mongoose.model('Todo', todoSchema)
 
 module.exports = {
@@ -80,28 +77,19 @@ module.exports = {
     })
   },
   updateTodo: (newItems, id) => {
+    return Todo.findByIdAndUpdate(id, newItems, {
+      new: true,
+      runValidators: true
+    });
 
-    return new Promise((resolve, reject) => {
-      Todo.findByIdAndUpdate({ _id: id }, { $set: newItems }, { returnUpdatedDocs: true }, (err, updated) => {
-        if (err) reject(err);
-        resolve(updated);
-      });
-    })
   },
   deleteTodo: (id) => {
     return new Promise((resolve, reject) => {
-      Todo.remove({ _id: id }, { multi: true }, function (err, numRemoved) {
+      Todo.deleteOne({ _id: id }, { multi: true }, function (err, numRemoved) {
         if (err) reject(err);
         resolve(numRemoved);
       });
 
     })
-  },
-  clearTodo: () => {
-    return Todo.remove({}, { multi: true }, function (err, numRemoved) {
-      Todo.loadDatabase(function (err) {
-        return
-      });
-    });
   }
 }

@@ -73,9 +73,7 @@ module.exports = {
       try {
       //  const todo = await MyModel.getTodo(id)
         const result = await MyModel.updateTodo(newTodo, id);
-        console.log('here1')
-     //   const removedtodo = await todolistModel.removeTodoFromList(todo)
-        console.log('here2')
+     //   const removedtodo = await todolistModel.removeTodoFromList(todo)     
       //  console.log(removedtodo)
        // await todolistModel.addTodoInList(result)
         res.status(200).json({

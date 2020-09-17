@@ -19,18 +19,15 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
     required: [true, 'Please select a role'],
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
   }
 })
+
+userSchema.set('timestamps', true)
 
 const User = mongoose.model('User', userSchema)
 
 module.exports = {
   register: async (data) => {
-    console.log(data)
     let password = data.password
     const salt = bcrypt.genSaltSync(10)
     const hashPass = bcrypt.hashSync(password, salt)
@@ -41,7 +38,6 @@ module.exports = {
       username: data.username,
       password: hashPass
     }
-    console.log(userRegister)
     const user = await User.create(userRegister)
     return user._doc
 

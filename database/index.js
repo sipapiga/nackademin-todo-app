@@ -44,10 +44,6 @@ async function connect () {
 }
 
 async function disconnect () {
-  if (process.env.ENVIRONMENT == 'test' || process.env.ENVIRONMENT == 'development') {
-    await mongoose.connection.close()
-    //await mongoose.connection.close()
-  }
   await mongoose.connection.close()
 }
 

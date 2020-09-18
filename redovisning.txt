@@ -1,0 +1,11 @@
+!--! REDOVISNING !--!
+
+Hej, 
+
+Jag skriver för att förklara varför jag använder mongodb localhost istället av Mongodb-Memory-Server package. 
+Anledning är att jag fick inte att Mongodb-Memory-Server att fungera, det tog mig hela dagen i torsdag 17/9 ,8 timmer kämpade för att det skulle funka men det gick inte.
+Så jag googlade fram och kom fram till att man kan använda mongodb i github actions. Källa: https://github.com/marketplace/actions/mongodb-in-github-actions 
+Asså vet inte riktig om det här lösning är bra men mina tester gick bra i github actions då. 
+
+MVH,
+Sipapat 

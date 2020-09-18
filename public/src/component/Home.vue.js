@@ -74,10 +74,6 @@ export const Home = Vue.component('Home', {
                       class="fas fa-trash-alt"></i></b-button>
                 </template>
               </b-table>
-              <p>
-                Selected Rows:<br>
-                {{ selected }}
-              </p>
             </div>
         </div>
       </div>

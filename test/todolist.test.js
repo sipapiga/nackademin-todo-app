@@ -1,36 +1,63 @@
-/* const { expect, should } = require('chai')
+var chai = require('chai')
+  , expect = chai.expect
+  , should = chai.should();
 const Todolist = require('../models/todolist')
 const Todo = require('../models/todo')
+const Database = require('../database/index')
+const User = require('../models/user')
 
 describe('TodoList Model', function () {
+  before(async () => {
+    await Database.connect()
+  })
+
+  after(async () => {
+    await Database.disconnect()
+  })
+
   beforeEach(async function () {
-    Todolist.clearTodolist()
-    Todo.clearTodo()
+    await Database.clearDatabase()
+
+    //create user 
+    const user = {
+      firstName: 'Rosalee',
+      role: 'admin',
+      username: 'Rosalee',
+      password: '2UYUfEwK1VtIl4o'
+    }
+
+    this.createUser = await User.register(user)
+
+    const todoList = {
+      title: 'List2',
+      user: this.createUser,
+      todos: []
+    }
+
+    const result = await Todolist.createTodolist(todoList)
+    console.log(result)
 
     //Create todoitem 
     const todoItem1 = {
       title: 'tenetur laborum commodi',
-      user: {
-        _id: 'xyz'
-      },
-      todolistId: 'Fkl5T2GK2qDG1qfI'
+      user: this.createUser,
+      todolistId: result._id
     }
     const todoItem2 = {
       title: 'in eum consequatur',
-      user: {
-        _id: 'abc'
-      },
-      todolistId: 'Fkl5T2GK2qDG1qfI'
+      user: this.createUser,
+      todolistId: result._id
     }
     this.todo1 = await Todo.createTodo(todoItem1);
     this.todo2 = await Todo.createTodo(todoItem2);
   })
 
   it('should create todoList with todos', async function () {
+    let user = this.createUser
     //create todoList
     const todoList = {
       title: 'List1',
-      createdBy: 'Pat',
+      createdBy: user,
       todos: []
     }
 
@@ -39,57 +66,43 @@ describe('TodoList Model', function () {
     //Create todoitem 
     const todoItem3 = {
       title: 'odio necessitatibus placeat',
-      user: {
-        _id: 'abc'
-      },
+      user: user,
       todolistId: result._id
     }
     const todoItem4 = {
       title: 'numquam necessitatibus ad',
-      user: {
-        _id: 'abc'
-      },
+      user: user,
       todolistId: result._id
     }
 
-    await Todo.createTodo(todoItem3);
-    await Todo.createTodo(todoItem4);
+    const result1 = await Todo.createTodo(todoItem3);
+    const result2 = await Todo.createTodo(todoItem4);
+    await Todolist.addTodoInList(result1)
+    await Todolist.addTodoInList(result2)
 
-    const todos = await Todo.getAll('abc')
+    const todolist = await Todolist.getTodolist(result._id)
 
-    const newtodo = todos.filter(function (todo) {
-      if (todo.todolistId === result._id) {
-        return todo
-      }
-    })
-    result.todos.push(newtodo)
 
-    expect(result.title).to.equal('List1');
+    expect(todolist.title).to.equal('List1');
   })
 
   it('should get all todolists', async function () {
     //create todoList
     const todoList = {
       title: 'List1',
-      createdBy: {
-        _id: 'Pat'
-      },
+      user: this.createUser,
       todos: [this.todo1, this.todo2]
     }
 
     const todoList2 = {
       title: 'List2',
-      createdBy: {
-        _id: 'Pat'
-      },
+      user: this.createUser,
       todos: [this.todo1, this.todo2]
     }
 
     const todoList3 = {
       title: 'List3',
-      createdBy:{
-        _id: 'Kalle'
-      },
+      user: this.createUser,
       todos: [this.todo1, this.todo2]
     }
 
@@ -97,9 +110,10 @@ describe('TodoList Model', function () {
     await Todolist.createTodolist(todoList2)
     await Todolist.createTodolist(todoList3)
 
-    const alltodoList = await Todolist.getAll('Pat')
+    const alltodoList = await Todolist.getAll(this.createUser._id)
 
-   // alltodoList.should.have.lengthOf(2)
+
+    alltodoList.should.have.lengthOf(4)
     expect(alltodoList).to.be.an('array')
   })
 
@@ -107,8 +121,8 @@ describe('TodoList Model', function () {
     //create todoList
     const todoList = {
       title: 'List1',
-      createdBy: 'Pat',
-      todos: [this.todo1._id,this.todo2._id]
+      user: this.createUser,
+      todos: [this.todo1._id, this.todo2._id]
     }
 
     const result = await Todolist.createTodolist(todoList)
@@ -116,7 +130,7 @@ describe('TodoList Model', function () {
     let newTitleTodolist = {
       title: 'Todolist1 changed'
     }
-  
+
     const updateTodolist = await Todolist.updateTodolist(newTitleTodolist, result._id)
 
     expect(updateTodolist).to.exist
@@ -127,14 +141,14 @@ describe('TodoList Model', function () {
     //create todoList
     const todoList = {
       title: 'List1',
-      createdBy: 'Pat',
-      todos: [this.todo1._id,this.todo2._id]
+      user: this.createUser,
+      todos: [this.todo1._id, this.todo2._id]
     }
 
     const todoList2 = {
       title: 'List2',
-      createdBy: 'Kiana',
-      todos: ['5f53aa72fc13ae3b8f000000','5f53aa72fc13ae3b8f000002']
+      user: this.createUser,
+      todos: [this.todo1._id, this.todo2._id]
     }
 
     const list1 = await Todolist.createTodolist(todoList)
@@ -142,8 +156,6 @@ describe('TodoList Model', function () {
 
     const deletedTodolist = await Todolist.deleteTodolist(list1._id)
 
-    deletedTodolist.should.be.equal(1);
-  }) 
-
-
-}) */
+    deletedTodolist.deletedCount.should.be.equal(1);
+  })
+})

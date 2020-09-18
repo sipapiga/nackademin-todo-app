@@ -15,13 +15,9 @@ const todolistSchema = new mongoose.Schema({
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
   }
 })
-
+todolistSchema.set('timestamps', true)
 const Todolist = mongoose.model('Todolist', todolistSchema)
 
 module.exports = {
@@ -70,6 +66,7 @@ module.exports = {
     })
   },
   getAll: (userId) => {
+    console.log(userId)
     return new Promise((resolve, reject) => {
       Todolist.find({ createdBy: userId }, (err, docs) => {
         if (err) reject(err);
@@ -95,12 +92,10 @@ module.exports = {
     });
   },
   updateTodolist: (newtodoList, id) => {
-    return new Promise((resolve, reject) => {
-      Todolist.findOneAndUpdate({ _id: id }, { $set: newtodoList }, { returnUpdatedDocs: true }, (err, numReplaced, updated) => {
-        if (err) reject(err);
-        resolve(updated);
-      });
-    })
+    return Todolist.findByIdAndUpdate(id, newtodoList, {
+      new: true,
+      runValidators: true
+    });
   },
   deleteTodolist: (id) => {
     return new Promise((resolve, reject) => {

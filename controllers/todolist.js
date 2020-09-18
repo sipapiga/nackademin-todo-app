@@ -8,11 +8,13 @@ module.exports = {
     if (todolist) {
       try {
         const result = await todolistModel.createTodolist(req.body);
+        console.log('result',result)
         res.status(201).json({
           message: 'Todolist Created',
           data: result
         });
       } catch (err) {
+        console.log(err)
         res.status(400).json('Something went wrong');
       }
     } else {

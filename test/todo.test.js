@@ -2,7 +2,6 @@ const chai = require('chai')
 chai.should()
 const Todo = require('../models/todo')
 const Database = require('../database/index')
-const mongoose = require('mongoose')
 
 describe('Todo Model', () => {
   before(async () => {

@@ -12,14 +12,14 @@ switch ((process.env.ENVIRONMENT)) {
       todolistCollection = new Datastore({ filename: 'database/todolist.db', autoload: true, timestampData: true }); */
     break;
   case 'test':
-      mongoDatabase = {
-       // mongodb+srv://user:password@host/dbname
-       getUri: async () =>
-         `mongodb://127.0.0.1:27017/Nackademin-todo-test`
-     }
-  
-  /*   const { MongoMemoryServer } = require('mongodb-memory-server')
-    mongoDatabase = new MongoMemoryServer({ binary: { version: '4.4.1' } }) */
+    mongoDatabase = {
+      // mongodb+srv://user:password@host/dbname
+      getUri: async () =>
+        `mongodb://127.0.0.1:27017/Nackademin-todo-test`
+    }
+
+    /*   const { MongoMemoryServer } = require('mongodb-memory-server')
+      mongoDatabase = new MongoMemoryServer({ binary: { version: '4.4.1' } }) */
     break;
   case 'production':
   case 'staging':
